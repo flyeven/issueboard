@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Issues</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <style>
+
+    /* Bootstrap Overrides */
+    body {
+        padding-top: 66px;
+    }
+    .navbar-text {
+        margin-left: 0px;
+        color: #ADAFB1 !important;
+    }
+    .panel-body {
+        white-space: normal;
+    }
+
+    /* Bootstrap Extension */
+    .list-group-item--done {
+        background: #EFE;
+        color: #ADAFB1;
+    }
+    .list-group-item--done a {
+        opacity: 1;
+    }
+
+    /* Custom CSS */
+    .issues-container {
+        margin: 0 0 0 15px;
+        white-space: nowrap;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+    .issues-container__column {
+        display: inline-block;
+        width: 260px;
+        margin: 0 15px 0 0;
+        vertical-align: top;
+    }
+    .issue {
+        display: block;
+    }
+    .issue:after {
+        content: " ";
+        display: table;
+        clear: both;
+    }
+    .issue__title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .issue__assignee img {
+        float: left;
+        height: 32px;
+        width: 32px;
+        border-radius: 16px;
+    }
+    .issue__tags {
+        float: left;
+        width: 196px;
+        padding: 5px 0 0 5px;
+        white-space: nowrap;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#site-nav">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Issues</a>
+            </div>
+            <div class="collapse navbar-collapse" id="site-nav">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a></li>
+                </ul>
+                <p class="nav navbar-nav navbar-right navbar-text">You are signed in as Martin King.</p>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <ol class="breadcrumb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Pharmaxo</a></li>
+            <li class="active">Dispatcher</li>
+        </ol>
+    </div>
+    <div class="issues-container">
+        <div class="issues-container__column">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">No Milestone</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width:25%">
+                            25%
+                        </div>
+                    </div>
+                    This is a description of this milestone. This explains what’s going on in this column.
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a href="#" class="issue">
+                            <h5 class="issue__title">Issue title goes here and it’s really long</h5>
+                            <p class="issue__assignee"><img src="images/martin-king.png" alt="Martin King"></p>
+                            <p class="issue__tags">
+                                <span class="label label-danger">Bug</span>
+                                <span class="label label-default"><span class="glyphicon glyphicon-comment"></span> 4</span>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#" class="issue">
+                            <h5 class="issue__title">Issue title goes here and it’s really long</h5>
+                            <p class="issue__assignee"><img src="images/martin-king.png" alt="Martin King"></p>
+                            <p class="issue__tags">
+                                <span class="label label-danger">Bug</span>
+                                <span class="label label-default"><span class="glyphicon glyphicon-comment"></span> 4</span>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#" class="issue">
+                            <h5 class="issue__title">Issue title goes here and it’s really long</h5>
+                            <p class="issue__assignee"><img src="images/martin-king.png" alt="Martin King"></p>
+                            <p class="issue__tags">
+                                <span class="label label-success">Enhancement</span>
+                                <span class="label label-default"><span class="glyphicon glyphicon-comment"></span> 4</span>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="list-group-item list-group-item--done">
+                        <a href="#" class="issue">
+                            <h5 class="issue__title">Issue title goes here and it’s really long</h5>
+                            <p class="issue__assignee"><img src="images/martin-king.png" alt="Martin King"></p>
+                            <p class="issue__tags">
+                                <span class="label label-danger">Bug</span>
+                                <span class="label label-danger">Bug</span>
+                                <span class="label label-danger">Bug</span>
+                                <span class="label label-danger">Bug</span>
+                                <span class="label label-danger">Bug</span>
+                                <span class="label label-danger">Bug</span>
+                                <span class="label label-danger">Bug</span>
+                                <span class="label label-default"><span class="glyphicon glyphicon-comment"></span> 4</span>
+                            </p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="issues-container__column">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Milestone 1</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                            100%
+                        </div>
+                    </div>
+                    This is a description of this milestone. This explains what’s going on in this column.
+                </div>
+            </div>
+        </div>
+        <div class="issues-container__column">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Milestone 1</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                            100%
+                        </div>
+                    </div>
+                    This is a description of this milestone. This explains what’s going on in this column.
+                </div>
+            </div>
+        </div>
+        <div class="issues-container__column">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Milestone 1</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                            100%
+                        </div>
+                    </div>
+                    This is a description of this milestone. This explains what’s going on in this column.
+                </div>
+            </div>
+        </div>
+        <div class="issues-container__column">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Milestone 1</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                            100%
+                        </div>
+                    </div>
+                    This is a description of this milestone. This explains what’s going on in this column.
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+</body>
+</html>
