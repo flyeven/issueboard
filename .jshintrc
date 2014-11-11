@@ -1,0 +1,8 @@
+{
+    "browser": true,
+    "node": true,
+    "globals": {
+        "require": false,
+        "stream": false
+    }
+}
