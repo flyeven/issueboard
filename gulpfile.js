@@ -92,6 +92,9 @@ function compileScripts(watch) {
 
 gulp.task('server', function (next) {
     var server = connect();
+    server.use(function(req,res) {
+        servestatic(dist).
+    });
     server.use(servestatic(dist)).listen(serverPort, next);
 });
 

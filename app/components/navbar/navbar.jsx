@@ -14,10 +14,11 @@ module.exports = React.createClass({
                             <span className="icon-bar"></span>
                             <span className="icon-bar"></span>
                           </button>
-                          <Link to="home" className="navbar-brand">IssueBoard</Link>
+                          <Link to="something" className="navbar-brand">IssueBoard</Link>
                     </div>
                 </div>
             </nav>
+
         );
     }
 });

@@ -10,6 +10,14 @@ var Navbar = require('./components/navbar/navbar.jsx');
 var NotFound = require('./components/notfound/notfound.jsx');
 var Test = require('./components/test/test.jsx');
 
+var Something = React.createClass({
+    render: function () {
+        return (
+            <h1>Something</h1>
+        )
+    }
+});
+
 var App = React.createClass({
     render: function () {
         return (
@@ -24,6 +32,7 @@ var App = React.createClass({
 React.renderComponent((
   <Routes location="history">
     <Route name="home" path="/" handler={App}>
+      <Route name="something" path="/something" handler={Something} />
       <DefaultRoute handler={Test} />
       <NotFoundRoute handler={NotFound} />
     </Route>
