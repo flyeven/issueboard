@@ -1,0 +1,61 @@
+    /* Bootstrap Overrides */
+    body {
+        padding-top: 66px;
+    }
+    .navbar-text {
+        margin-left: 0px;
+        color: #ADAFB1 !important;
+    }
+    .panel-body {
+        white-space: normal;
+    }
+
+    /* Bootstrap Extension */
+    .list-group-item--done {
+        background: #EFE;
+        color: #ADAFB1;
+    }
+    .list-group-item--done a {
+        opacity: 1;
+    }
+
+    /* Custom CSS */
+    .issues-container {
+        margin: 0 0 0 15px;
+        white-space: nowrap;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+    .issues-container__column {
+        display: inline-block;
+        width: 260px;
+        margin: 0 15px 0 0;
+        vertical-align: top;
+    }
+    .issue {
+        display: block;
+    }
+    .issue:after {
+        content: " ";
+        display: table;
+        clear: both;
+    }
+    .issue__title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .issue__assignee img {
+        float: left;
+        height: 32px;
+        width: 32px;
+        border-radius: 16px;
+    }
+    .issue__tags {
+        float: left;
+        width: 196px;
+        padding: 5px 0 0 5px;
+        white-space: nowrap;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }

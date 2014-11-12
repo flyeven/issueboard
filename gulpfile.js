@@ -15,6 +15,7 @@ var reactify = require('reactify');
 var source = require('vinyl-source-stream');
 var streamify = require('gulp-streamify');
 var uglify = require('gulp-uglify');
+var sass = require('gulp-sass');
 
 /* config vars */
 var serverPort = 8888;
@@ -26,6 +27,7 @@ var dist = 'dist';
 var htmlFiles = './app/**/*.html';
 var jsxFiles = './app/**/*.jsx';
 var entryFile = './app/app.jsx';
+var scssFile = './app/styles/screen.scss';
 
 var config = {
     debug: false
@@ -54,7 +56,13 @@ gulp.task('html', function () {
 
 gulp.task('scripts', function() {
     return compileScripts(false);
-})
+});
+
+gulp.task('styles', function() {
+  return gulp.src(scssFile)
+    .pipe(sass({ style: 'compressed' }))
+    .pipe(gulp.dest(dist));
+});
 
 function compileScripts(watch) {
     var bundler = browserify({
@@ -63,7 +71,6 @@ function compileScripts(watch) {
         extensions: ['.js', '.jsx'],
         debug: config.debug
     });
-
     if (watch) {
         bundler = watchify(bundler);
     }
@@ -97,7 +104,7 @@ gulp.task('server', function (next) {
 
 function initWatch(files, task) {
     if (typeof task === "string") {
-        gulp.start(task);
+        gulp.start(tfask);
         gulp.watch(files, [task]);
     } else {
         task.map(function (task) { gulp.start(task); });
@@ -115,7 +122,7 @@ gulp.task('configure-release', function() {
     config.debug = false;
 });
 
-gulp.task('build', [ 'vendor', 'html', 'scripts' ]);
+gulp.task('build', [ 'vendor', 'html','styles', 'scripts' ]);
 
 gulp.task('watch', function () {
     var lrServer = livereload(liveReloadPort);
