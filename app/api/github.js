@@ -1,6 +1,8 @@
 module.exports = {
     getOrganisations: getOrganisations,
-    getOrganisationRepositories: getOrganisationRepositories
+    getOrganisationRepositories: getOrganisationRepositories,
+    getMilestones: getMilestones,
+    getMilestoneIssues: getMilestoneIssues,
 };
 
 var API_BASE = "https://api.github.com";
@@ -10,8 +12,17 @@ function getOrganisations()
     return sendRequest("/user/orgs", "GET");
 }
 
-function getOrganisationRepositories(orgName) {
-    return sendRequest("/orgs/" + orgName + "/repos", "GET");
+function getOrganisationRepositories(org) {
+    return sendRequest("/orgs/" + org + "/repos", "GET");
+}
+
+function getMilestones(org, repo) {
+    return sendRequest("/repos/" + org + "/" + repo + "/milestones", "GET");
+}
+
+//can pass "none" as milestone to get unassigned stuff
+function getMilestoneIssues(org, repo, milestone) {
+    return sendRequest("/repos/" + org + "/" + repo + "/issues" + "?milestone=" + milestone + "&state=all&sort=updated", "GET");
 }
 
 function sendRequest(url, action)

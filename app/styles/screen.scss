@@ -54,8 +54,7 @@
     .issue__tags {
         float: left;
         width: 196px;
-        padding: 5px 0 0 5px;
-        white-space: nowrap;
-        overflow-x: scroll;
-        -webkit-overflow-scrolling: touch;
+        padding: 5px 5px 0 0;
+        overflow: hidden;
+        display: inline-block;
     }

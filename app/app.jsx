@@ -34,7 +34,7 @@ var App = React.createClass({
 });
 
 React.render((
-    <Routes location="history">
+    <Routes location="hash">
         <Route name="home" path="/" handler={App} alt="Home">
             <DefaultRoute handler={Organisations} />
             <Route name="organisation" path=":organisation" handler={Organisations}/>

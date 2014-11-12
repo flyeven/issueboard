@@ -138,6 +138,7 @@ gulp.task('watch', function () {
 
     compileScripts(true);
     initWatch(htmlFiles, 'html');
+    initWatch(scssFile, 'styles')
 
     gulp.watch([dist + '/**/*'], reloadPage);
 });
