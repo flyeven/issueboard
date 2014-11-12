@@ -79,14 +79,14 @@ module.exports = React.createClass({
 
 var Milestone = React.createClass({
     getInitialState: function () {
-        return { loading: true, issues: [] };
+        return { loading: true, issues: [], dragOver: 0 };
     },
     componentDidMount: function () {
         this.loadIssues();
     },
     loadIssues: function (organisation, repository) {
         var component = this;
-        this.setState({ loading: true, issues: [] });
+        this.setState({ loading: true, issues: [], dragOver: 0 });
 
         Github.getMilestoneIssues(this.props.organisation, this.props.repository, this.props.milestone.number)
             .then(function(result) {
@@ -114,7 +114,19 @@ var Milestone = React.createClass({
                 console.log(error);
             });
     },
-
+    dragOver: function (event) {
+        event.preventDefault();
+    },
+    dragEnter: function (event) {
+        event.preventDefault();
+        this.setState({dragOver: this.state.dragOver + 1});
+    },
+    dragLeave: function (event) {
+        this.setState({dragOver: this.state.dragOver - 1});
+    },
+    drop: function (event) {
+        this.setState({dragOver: 0});
+    },
     render: function () {
         var data = this.props.milestone;
         var totalIssues = data.openIssues + data.closedIssues;
@@ -139,9 +151,15 @@ var Milestone = React.createClass({
             });
         }
 
+        var dragIssue;
+        if(this.state.dragOver > 0)
+        {
+            dragIssue = <li className="issue-placeholder"></li>;
+        }
+
         return (
             <div className="issues-container__column">
-                <div className="panel panel-default">
+                <div className="panel panel-info" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.drop}>
                     <div className="panel-heading">
                         <h2 className="panel-title">{this.props.milestone.title}</h2>
                     </div>
@@ -150,6 +168,7 @@ var Milestone = React.createClass({
                         {this.props.milestone.description}
                     </div>
                     <ul className="list-group">
+                        {dragIssue}
                         {issues}
                     </ul>
                 </div>
@@ -163,6 +182,7 @@ var Issue = React.createClass({
         var tags = [];
         var cx = React.addons.classSet;
         var itemClasses = cx({
+            'issue': true,
             'list-group-item': true,
             'list-group-item--done': this.props.closed
         });
@@ -175,16 +195,31 @@ var Issue = React.createClass({
         }
 
         return (
-            <li className={itemClasses}>
-                <a href='#' className="issue">
-                    <h5 className="issue__title">{this.props.title}</h5>
-                    { this.props.assignee ? <p className="issue__assignee"><img src={this.props.assignee} /></p> : null }
-                    <p className="issue__tags">
-                        {tags}
-                        <span className="label label-default"><span className="glyphicon glyphicon-comment"></span> {this.props.comments}</span>
-                    </p>
-                </a>
+            <li className={itemClasses} draggable="true" onDrag={this.drag} onDragStart={this.dragStart} onDragEnd={this.dragEnd} >
+                <h5 className="issue__title">{this.props.title}</h5>
+                { this.props.assignee ? <p className="issue__assignee"><img src={this.props.assignee} /></p> : null }
+                <p className="issue__tags">
+                    {tags}
+                    <span className="label label-default"><span className="glyphicon glyphicon-comment"></span> {this.props.comments}</span>
+                </p>
             </li>
         );
+    },
+    drag: function (event) {
+        event.dataTransfer.setData("text", event.target.id);
+    },
+    dragStart: function (event) {
+        console.log("dragStart");
+        setTimeout(function() { 
+            var el = this.getDOMNode();
+            console.log(el);
+            el.classList.add('list-group-item--dragging'); 
+        }.bind(this), 0);
+    },
+    dragEnd: function (event) {
+        var el=this.getDOMNode();
+            console.log(el);
+        el.classList.remove('list-group-item--dragging');
+        console.log("dragEnd");
     }
 });

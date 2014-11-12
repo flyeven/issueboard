@@ -18,6 +18,9 @@
     .list-group-item--done a {
         opacity: 1;
     }
+    .list-group-item--dragging {
+        display: none !important;
+    }
 
     /* Custom CSS */
     .issues-container {
@@ -34,6 +37,11 @@
     }
     .issue {
         display: block;
+    }
+    .issue-placeholder {
+        display: block;
+        height: 100px;
+        background-color: #ddd;
     }
     .issue:after {
         content: " ";
