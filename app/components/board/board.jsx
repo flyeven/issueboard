@@ -1,4 +1,4 @@
-var React = require('react');
+var React = require('react/addons');
 var BreadCrumbs = require('../navigation/breadcrumbs.jsx');
 var Github = require('../../api/github.js');
 
@@ -28,7 +28,6 @@ module.exports = React.createClass({
                         return;
                     }
                     var milestones = result.data.map(function(m) {
-                        console.log(m);
                         return {
                             number: m.number,
                             state: m.state,
@@ -49,7 +48,6 @@ module.exports = React.createClass({
                             closedIssues: 0
                         }
                     );
-                    console.log(milestones.length + " Milestones");
                     component.setState({ loading: false, milestones: milestones});
                 }
             }, function (error) {
@@ -121,13 +119,13 @@ var Milestone = React.createClass({
         var data = this.props.milestone;
         var totalIssues = data.openIssues + data.closedIssues;
         var percentComplete = data.totalIssues === 0 ? 0 : (data.closedIssues / totalIssues) * 100;
-        console.log(percentComplete);
         var percentCompleteCss = percentComplete + "%";
 
         var progressbar = data.number === "none" ? null : (
             <div className="progress">
-                <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{width: percentCompleteCss}} />
-                {this.props.milestone.openIssues} / {totalIssues}
+                <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow={percentComplete} aria-valuemin="0" aria-valuemax="100" style={{width: percentCompleteCss}} >
+                {this.props.milestone.closedIssues} / {totalIssues}
+                </div>
             </div>
         );
 
@@ -137,7 +135,7 @@ var Milestone = React.createClass({
             issues = [<li>Loading Issues...</li>];
         } else {
             issues = this.state.issues.map(function(issue) {
-                return <Issue key={issue.number} title={issue.title} assignee={issue.assignee_avatar} labels={issue.labels} comments={issue.comments} />;
+                return <Issue key={issue.number} title={issue.title} assignee={issue.assignee_avatar} labels={issue.labels} comments={issue.comments} closed={issue.state == "closed"} />;
             });
         }
 
@@ -162,21 +160,22 @@ var Milestone = React.createClass({
 
 var Issue = React.createClass({
     render: function () {
-        console.log("rendering issue");
-
         var tags = [];
+        var cx = React.addons.classSet;
+        var itemClasses = cx({
+            'list-group-item': true,
+            'list-group-item--done': this.props.closed
+        });
 
         if(this.props.labels) {
-            console.log('creating labels', this.props.labels);
             tags = this.props.labels.map(function(label) {
                 var bg = "#" + label.color;
                 return (<span className="label" style={{background: bg}}>{label.name}</span>);
             });
         }
-        console.log("tags");
 
         return (
-            <li className="list-group-item">
+            <li className={itemClasses}>
                 <a href='#' className="issue">
                     <h5 className="issue__title">{this.props.title}</h5>
                     { this.props.assignee ? <p className="issue__assignee"><img src={this.props.assignee} /></p> : null }
