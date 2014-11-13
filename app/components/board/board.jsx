@@ -223,3 +223,8 @@ var Issue = React.createClass({
         console.log("dragEnd");
     }
 });
+
+
+//drag data contains callback
+//source receives updated issue as well as dest
+//can fix things if the issue doesnt actually update
