@@ -57,12 +57,20 @@
         float: left;
         height: 32px;
         width: 32px;
+        margin: 0 5px 0 0;
         border-radius: 16px;
     }
     .issue__tags {
         float: left;
-        width: 196px;
-        padding: 5px 5px 0 0;
+        width: 100%;
+        padding: 5px 0 0 0;
         overflow: hidden;
-        display: inline-block;
+        span {
+            display: inline-block;
+            margin: 0 2px 0 0;
+        }
+    }
+    .issue__tags--assignee {
+        @extend .issue__tags;
+        width: calc(100% - 37px);
     }

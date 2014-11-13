@@ -198,9 +198,9 @@ var Issue = React.createClass({
             <li className={itemClasses} draggable="true" onDrag={this.drag} onDragStart={this.dragStart} onDragEnd={this.dragEnd} >
                 <h5 className="issue__title">{this.props.title}</h5>
                 { this.props.assignee ? <p className="issue__assignee"><img src={this.props.assignee} /></p> : null }
-                <p className="issue__tags">
-                    {tags}
+                <p className={this.props.assignee ? "issue__tags--assignee" : "issue__tags"}ß>
                     <span className="label label-default"><span className="glyphicon glyphicon-comment"></span> {this.props.comments}</span>
+                    {tags}
                 </p>
             </li>
         );
