@@ -158,21 +158,19 @@ var Milestone = React.createClass({
         }
 
         return (
-            <div className="issues-container__column">
-                <div className="panel panel-info" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.drop}>
+                <div className="panel panel-info issues-container__column" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.drop}>
                     <div className="panel-heading">
                         <h2 className="panel-title">{this.props.milestone.title}</h2>
                     </div>
                     <div className="panel-body">
                         {progressbar}
                         {this.props.milestone.description}
+                        <ul className="list-group">
+                            {dragIssue}
+                            {issues}
+                        </ul>
                     </div>
-                    <ul className="list-group">
-                        {dragIssue}
-                        {issues}
-                    </ul>
                 </div>
-            </div>
         );
     }
 });

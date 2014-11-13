@@ -7,7 +7,23 @@
         color: #ADAFB1 !important;
     }
     .panel-body {
+        max-height: calc(100vh - 178px);
         white-space: normal;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+        .list-group {
+            margin: 20px -15px 0 !important;
+            border: 0 !important;
+            li {
+                border-radius: 0 !important;
+                border-left: 0 !important;
+                border-right: 0 !important;
+                &:last-child {
+                    margin-bottom: -15px !important;
+                    border-bottom: 0 !important;
+                }
+            }
+        }
     }
 
     /* Bootstrap Extension */
@@ -25,10 +41,8 @@
     /* Custom CSS */
     .issues-container {
         margin: 0 0 0 15px;
-        height: calc(100vh - 140px);
         white-space: nowrap;
         overflow-x: scroll;
-        overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
     }
     .issues-container__column {
@@ -36,7 +50,6 @@
         width: 260px;
         margin: 0 15px 0 0;
         vertical-align: top;
-        max-height: 100%;
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
     }
