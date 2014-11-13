@@ -1,95 +1,94 @@
-    /* Bootstrap Overrides */
-    body {
-        padding-top: 66px;
-    }
-    .navbar-text {
-        margin-left: 0px;
-        color: #ADAFB1 !important;
-    }
-    .panel-body {
-        max-height: calc(100vh - 178px);
-        white-space: normal;
-        overflow-y: scroll;
-        -webkit-overflow-scrolling: touch;
-        .list-group {
-            margin: 20px -15px 0 !important;
-            border: 0 !important;
-            li {
-                border-radius: 0 !important;
-                border-left: 0 !important;
-                border-right: 0 !important;
-                &:last-child {
-                    margin-bottom: -15px !important;
-                    border-bottom: 0 !important;
-                }
+/* Bootstrap Overrides */
+body {
+    padding-top: 66px;
+}
+.navbar-text {
+    margin-left: 0px;
+    color: #ADAFB1 !important;
+}
+.panel-body {
+    max-height: calc(100vh - 178px);
+    white-space: normal;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    .list-group {
+        margin: 20px -15px 0 !important;
+        border: 0 !important;
+        li {
+            border-radius: 0 !important;
+            border-left: 0 !important;
+            border-right: 0 !important;
+            &:last-child {
+                margin-bottom: -15px !important;
+                border-bottom: 0 !important;
             }
         }
     }
+}
 
-    /* Bootstrap Extension */
-    .list-group-item--done {
-        background: #EFE !important;
-        color: #ADAFB1 !important;
-    }
-    .list-group-item--done a {
-        opacity: 1;
-    }
-    .list-group-item--dragging {
-        display: none !important;
-    }
+/* Bootstrap Extension */
+.list-group-item--done {
+    background: #EFE !important;
+    color: #ADAFB1 !important;
+}
+.list-group-item--done a {
+    opacity: 1;
+}
+.list-group-item--dragging {
+    display: none !important;
+}
 
-    /* Custom CSS */
-    .issues-container {
-        margin: 0 0 0 15px;
-        white-space: nowrap;
-        overflow-x: scroll;
-        -webkit-overflow-scrolling: touch;
-    }
-    .issues-container__column {
+/* Custom CSS */
+.issues-container {
+    margin: 0 0 0 15px;
+    white-space: nowrap;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+.issues-container__column {
+    display: inline-block;
+    width: 260px;
+    margin: 0 15px 0 0;
+    vertical-align: top;
+}
+.issue {
+    display: block;
+}
+.issue-placeholder {
+    display: block;
+    height: 100px;
+    background-color: #ddd;
+}
+.issue:after {
+    content: " ";
+    display: table;
+    clear: both;
+}
+.issue__title {
+    display: block;
+    white-space: normal;
+    line-height: 20px;
+    // white-space: nowrap;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
+}
+.issue__assignee img {
+    float: left;
+    height: 32px;
+    width: 32px;
+    margin: 0 5px 0 0;
+    border-radius: 16px;
+}
+.issue__tags {
+    float: left;
+    width: 100%;
+    padding: 5px 0 0 0;
+    overflow: hidden;
+    span {
         display: inline-block;
-        width: 260px;
-        margin: 0 15px 0 0;
-        vertical-align: top;
+        margin: 0 2px 0 0;
     }
-    .issue {
-        display: block;
-    }
-    .issue-placeholder {
-        display: block;
-        height: 100px;
-        background-color: #ddd;
-    }
-    .issue:after {
-        content: " ";
-        display: table;
-        clear: both;
-    }
-    .issue__title {
-        display: block;
-        white-space: normal;
-        line-height: 20px;
-        // white-space: nowrap;
-        // overflow: hidden;
-        // text-overflow: ellipsis;
-    }
-    .issue__assignee img {
-        float: left;
-        height: 32px;
-        width: 32px;
-        margin: 0 5px 0 0;
-        border-radius: 16px;
-    }
-    .issue__tags {
-        float: left;
-        width: 100%;
-        padding: 5px 0 0 0;
-        overflow: hidden;
-        span {
-            display: inline-block;
-            margin: 0 2px 0 0;
-        }
-    }
-    .issue__tags--assignee {
-        @extend .issue__tags;
+    .issue__has-assignee & {
         width: calc(100% - 37px);
     }
+}

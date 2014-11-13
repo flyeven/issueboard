@@ -182,7 +182,8 @@ var Issue = React.createClass({
         var itemClasses = cx({
             'issue': true,
             'list-group-item': true,
-            'list-group-item--done': this.props.closed
+            'list-group-item--done': this.props.closed,
+            'issue__has-assignee': this.props.assignee
         });
 
         if(this.props.labels) {
@@ -196,7 +197,7 @@ var Issue = React.createClass({
             <li className={itemClasses} draggable="true" onDrag={this.drag} onDragStart={this.dragStart} onDragEnd={this.dragEnd} >
                 <h5 className="issue__title">{this.props.title}</h5>
                 { this.props.assignee ? <p className="issue__assignee"><img src={this.props.assignee} /></p> : null }
-                <p className={this.props.assignee ? "issue__tags--assignee" : "issue__tags"}ß>
+                <p className="issue__tags">
                     <span className="label label-default"><span className="glyphicon glyphicon-comment"></span> {this.props.comments}</span>
                     {tags}
                 </p>
