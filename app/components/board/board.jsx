@@ -2,6 +2,16 @@ var React = require('react/addons');
 var BreadCrumbs = require('../navigation/breadcrumbs.jsx');
 var Github = require('../../api/github.js');
 var Milestone = require('./milestone.jsx');
+var NULL_MILESTONE =   
+    {
+        number: "none",
+        state: "open",
+        title: "Unassigned Issues",
+        description: "This is the backlog of issues with no milestone assigned",
+        open_issues: 0,
+        closed_issues: 0
+    };
+
 
 module.exports = React.createClass({
     getInitialState: function () {
@@ -16,54 +26,81 @@ module.exports = React.createClass({
     componentDidMount: function () {
         this.loadRepo(this.props.params.organisation, this.props.params.repository);
     },
-    loadRepo: function (organisation, repository) {
+    loadRepo: function () {
+        var org = this.props.params.organisation,
+            repo = this.props.params.repository;
+
         var component = this;
         this.setState({ loading: true, milestones: [] });
 
-        Github.getMilestones(organisation, repository)
-            .then(function(result) {
-                if(component.isMounted()) {
-                    if(!result.success)
-                    {
-                        alert("Error connecting to github api: " + result.data.message);
-                        return;
-                    }
-                    var milestones = result.data.map(function(m) {
-                        return {
-                            number: m.number,
-                            state: m.state,
-                            title: m.title,
-                            description: m.description,
-                            openIssues: m.open_issues,
-                            closedIssues: m.closed_issues
-                        };
-                    });
-                    //we always want the "no milestone" column first
-                    milestones.unshift(
-                        {
-                            number: "none",
-                            state: "open",
-                            title: "Unassigned Issues",
-                            description: "This is the backlog of issues with no milestone assigned",
-                            openIssues: 0,
-                            closedIssues: 0
-                        }
-                    );
-                    component.setState({ loading: false, milestones: milestones});
-                }
+        Github.getMilestones(org, repo)
+            .then(result => {
+                //we always want the "no milestone" column first
+                result.data.unshift(NULL_MILESTONE);
+                //need to request all the issues for each milestone
+                Promise.all(result.data.map(component.enrichMilestone))
+                       .then(milestones => {
+                            if(this.isMounted())
+                                this.setState({ loading: false, milestones: milestones});
+                        });
             }, function (error) {
-                console.log("github error:");
-                console.log(error);
+                console.log("github error:", error);
+                alert(error);
             });
     },
+    //downloads the issues for this milestone, returns a promise
+    enrichMilestone: function (m) {
+        var org = this.props.params.organisation,
+            repo = this.props.params.repository;
+
+        return Github.getMilestoneIssues(org,repo,m.number)
+                .then(result => {
+                    console.log("mapping", result);
+                    return {
+                        number: m.number,
+                        state: m.state,
+                        title: m.title,
+                        description: m.description,
+                        openIssues: m.open_issues,
+                        closedIssues: m.closed_issues,
+
+                        //then for each issue
+                        issues: result.data.map(
+
+                            i => {
+                                return {
+                                    number: i.number,
+                                    state: i.state,
+                                    title: i.title,
+                                    labels: i.labels,
+                                    body: i.body,
+                                    comments: i.comments,
+                                    assignee_avatar: i.assignee ?
+                                                     i.assignee.avatar_url :
+                                                     null //TODO: some placeholder?
+                                };
+                            }
+                        )
+                    };
+                }); 
+    },
     render: function () {
-        if(this.state.loading) {
+        var s = this.state;
+        var p = this.props;
+        console.log("rendering board");
+        console.log(s);
+        if(s.loading) {
             return  <p>Loading repository...</p>;
         }
-        var component = this;
-        var milestones = this.state.milestones.map(function (m) {
+        var milestones = s.milestones.map(m => {
             return (
-                <Milestone key={m.number} organisation={component.props.params.organisation} repository={component.props.params.repository} milestone={m} />
+                <Milestone key={m.number}
+                           title={m.title}
+                           description={m.description}
+                           openIssues={m.openIssues}
+                           closedIssues={m.closedIssues}
+                           issues={m.issues}
+                           state={m.state} />
             );
         });
 

@@ -13,7 +13,7 @@ function getOrganisations()
 }
 
 function getOrganisationRepositories(org) {
-    return sendRequest("/orgs/" + org + "/repos", "GET");
+    return sendRequest("/orgs/" + org + "/repos", "GET").then();
 }
 
 function getMilestones(org, repo) {
@@ -22,12 +22,13 @@ function getMilestones(org, repo) {
 
 //can pass "none" as milestone to get unassigned stuff
 function getMilestoneIssues(org, repo, milestone) {
+    console.log("milestone issues");
+    console.log(milestone);
     return sendRequest("/repos/" + org + "/" + repo + "/issues" + "?milestone=" + milestone + "&state=all&sort=updated", "GET");
 }
 
 function sendRequest(url, action)
 {
-    console.log(action + " request to " + url);
     //load oauth key from localstorage
     var key = localStorage.getItem("oauth_key");
     var promise = new Promise(function(resolve, reject) {
@@ -49,7 +50,13 @@ function sendRequest(url, action)
                     reset: request.getResponseHeader("X-RateLimit-Reset")
                 }
             };
-            resolve(result);
+            
+            if(success) {
+                console.log("resolving");
+                resolve(result);
+            } else {
+                reject(errorMessage(result));
+            }
         };
 
         request.onerror = function() {
@@ -60,4 +67,10 @@ function sendRequest(url, action)
 
      });
      return promise;
+}
+
+///Used for friendly error messages for a given result
+function errorMessage(result) {
+    //TODO: real implementation of this rather than just using github errors
+    return result.data.message; //this will be an error message
 }

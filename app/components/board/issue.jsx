@@ -2,6 +2,7 @@ var React = require('react/addons');
 
 module.exports = React.createClass({
     render: function () {
+        console.log("rendering issue", this.props.number);
         var tags = [];
         var cx = React.addons.classSet;
         var itemClasses = cx({

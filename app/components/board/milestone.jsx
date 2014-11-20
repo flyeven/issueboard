@@ -4,40 +4,7 @@ var Github = require('../../api/github.js');
 
 module.exports = React.createClass({
     getInitialState: function () {
-        return { loading: true, issues: [], dragOver: 0 };
-    },
-    componentDidMount: function () {
-        this.loadIssues();
-    },
-    loadIssues: function (organisation, repository) {
-        var component = this;
-        this.setState({ loading: true, issues: [], dragOver: 0 });
-
-        Github.getMilestoneIssues(this.props.organisation, this.props.repository, this.props.milestone.number)
-            .then(function(result) {
-                if(component.isMounted()) {
-                    if(!result.success)
-                    {
-                        alert("Error connecting to github api: " + result.data.message);
-                        return;
-                    }
-                    var issues = result.data.map(function(i) {
-                        return {
-                            number: i.number,
-                            state: i.state,
-                            title: i.title,
-                            labels: i.labels,
-                            body: i.body,
-                            comments: i.comments,
-                            assignee_avatar: i.assignee ? i.assignee.avatar_url : null
-                        };
-                    });
-                    component.setState({ loading: false, issues: issues});
-                }
-            }, function (error) {
-                console.log("github error:");
-                console.log(error);
-            });
+        return { dragOver: 0 };
     },
     dragOver: function (event) {
         event.preventDefault();
@@ -53,49 +20,56 @@ module.exports = React.createClass({
         this.setState({dragOver: 0});
     },
     render: function () {
-        var data = this.props.milestone;
-        var totalIssues = data.openIssues + data.closedIssues;
-        var percentComplete = data.totalIssues === 0 ? 0 : (data.closedIssues / totalIssues) * 100;
-        var percentCompleteCss = percentComplete + "%";
+        var p = this.props,
+            s = this.state,
 
-        var progressbar = data.number === "none" ? null : (
-            <div className="progress">
-                <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow={percentComplete} aria-valuemin="0" aria-valuemax="100" style={{width: percentCompleteCss}} >
-                {this.props.milestone.closedIssues} / {totalIssues}
-                </div>
-            </div>
-        );
+            totalIssues = p.openIssues + p.closedIssues,
+            percentComplete = totalIssues === 0 ? 0 : (p.closedIssues / totalIssues) * 100,
+            percentCss = percentComplete + '%',
 
-        var issues = [];
+            progressbar = p.key === "none" ? null :
+                <div className="progress">
+                    <div className="progress-bar progress-bar-success" 
+                         role="progressbar" 
+                         aria-valuenow={percentComplete} 
+                         aria-valuemin="0" 
+                         aria-valuemax="100"
+                         style={{width: percentCss}}>
 
-        if(this.state.loading) {
-            issues = [<li>Loading Issues...</li>];
-        } else {
-            issues = this.state.issues.map(function(issue) {
-                return <Issue key={issue.number} title={issue.title} assignee={issue.assignee_avatar} labels={issue.labels} comments={issue.comments} closed={issue.state == "closed"} />;
-            });
-        }
+                         {p.closedIssues} / {totalIssues}
 
-        var dragIssue;
-        if(this.state.dragOver > 0)
-        {
-            dragIssue = <li className="issue-placeholder"></li>;
-        }
+                    </div>
+                </div>,
+
+            issues = p.issues.map(i => 
+                {
+                    return <Issue key={i.number}
+                              title={i.title}
+                              assignee={i.assignee_avatar}
+                              labels={i.labels}
+                              comments={i.comments}
+                              closed={i.state == "closed"} />;
+                });
 
         return (
-                <div className="panel panel-info issues-container__column" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.drop}>
-                    <div className="panel-heading">
-                        <h2 className="panel-title">{this.props.milestone.title}</h2>
-                    </div>
-                    <div className="panel-body">
-                        {progressbar}
-                        {this.props.milestone.description}
-                        <ul className="list-group">
-                            {dragIssue}
-                            {issues}
-                        </ul>
-                    </div>
+            <div className="panel panel-info issues-container__column"
+                 onDragOver={this.dragOver} onDragEnter={this.dragEnter} 
+                 onDragLeave={this.dragLeave} onDrop={this.drop}>
+
+                <div className="panel-heading">
+                    <h2 className="panel-title">{p.title}</h2>
                 </div>
+
+                <div className="panel-body">
+                    {progressbar}
+                    {p.description}
+                    <ul className="list-group">
+                        {s.dragOver ? <li className="issue-placeholder"></li> : null}
+                        {issues}
+                    </ul>
+                </div>
+
+            </div>
         );
     }
 });
