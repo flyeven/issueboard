@@ -55,7 +55,6 @@ module.exports = React.createClass({
 
         return Github.getMilestoneIssues(org,repo,m.number)
                 .then(result => {
-                    console.log("mapping", result);
                     return {
                         number: m.number,
                         state: m.state,
@@ -87,8 +86,7 @@ module.exports = React.createClass({
     render: function () {
         var s = this.state;
         var p = this.props;
-        console.log("rendering board");
-        console.log(s);
+
         if(s.loading) {
             return  <p>Loading repository...</p>;
         }

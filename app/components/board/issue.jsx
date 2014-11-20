@@ -2,7 +2,6 @@ var React = require('react/addons');
 
 module.exports = React.createClass({
     render: function () {
-        console.log("rendering issue", this.props.number);
         var tags = [];
         var cx = React.addons.classSet;
         var itemClasses = cx({
@@ -34,18 +33,14 @@ module.exports = React.createClass({
         event.dataTransfer.setData("text", event.target.id);
     },
     dragStart: function (event) {
-        console.log("dragStart");
         setTimeout(function() { 
             var el = this.getDOMNode();
-            console.log(el);
             el.classList.add('list-group-item--dragging'); 
         }.bind(this), 0);
     },
     dragEnd: function (event) {
         var el=this.getDOMNode();
-            console.log(el);
         el.classList.remove('list-group-item--dragging');
-        console.log("dragEnd");
     }
 });
 
