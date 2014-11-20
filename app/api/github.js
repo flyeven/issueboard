@@ -22,8 +22,6 @@ function getMilestones(org, repo) {
 
 //can pass "none" as milestone to get unassigned stuff
 function getMilestoneIssues(org, repo, milestone) {
-    console.log("milestone issues");
-    console.log(milestone);
     return sendRequest("/repos/" + org + "/" + repo + "/issues" + "?milestone=" + milestone + "&state=all&sort=updated", "GET");
 }
 
@@ -52,7 +50,6 @@ function sendRequest(url, action)
             };
             
             if(success) {
-                console.log("resolving");
                 resolve(result);
             } else {
                 reject(errorMessage(result));
