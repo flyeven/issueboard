@@ -15,10 +15,12 @@ var Organisations = require('./components/navigation/organisation.jsx');
 
 var NotFound = require('./components/notfound/notfound.jsx');
 
-console.log(localStorage.getItem("oauth_key"));
-if(localStorage.getItem("oauth_key") === null) 
+var currentKey = localStorage.getItem("oauth_key");
+if(currentKey === null || currentKey === "null") 
 {
-    localStorage.setItem("oauth_key",window.prompt("Please supply an oauth key:"));
+    var key = window.prompt("Login doesnt work yet, please supply an oauth key instead:");
+    if(key !== undefined && key !== "")
+        localStorage.setItem("oauth_key",key);
 }
 
 var App = React.createClass({
