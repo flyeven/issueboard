@@ -20,16 +20,14 @@ module.exports = React.createClass({
             milestones: []
         };
     },
-    componentWillChangeProps: function (props) {
-        this.loadRepo(this.props.params.organisation, this.props.params.repository);
+    componentWillReceiveProps: function (props) {
+        console.log(props);
+        this.loadRepo(props.params.organisation, props.params.repository);
     },
     componentDidMount: function () {
         this.loadRepo(this.props.params.organisation, this.props.params.repository);
     },
-    loadRepo: function () {
-        var org = this.props.params.organisation,
-            repo = this.props.params.repository;
-
+    loadRepo: function (org,repo) {
         var component = this;
         this.setState({ loading: true, milestones: [] });
 
