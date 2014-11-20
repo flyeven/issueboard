@@ -17,7 +17,7 @@ function getOrganisationRepositories(org) {
 }
 
 function getMilestones(org, repo) {
-    return sendRequest("/repos/" + org + "/" + repo + "/milestones", "GET");
+    return sendRequest("/repos/" + org + "/" + repo + "/milestones?state=all", "GET");
 }
 
 //can pass "none" as milestone to get unassigned stuff

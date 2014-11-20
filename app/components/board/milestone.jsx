@@ -27,7 +27,7 @@ module.exports = React.createClass({
             percentComplete = totalIssues === 0 ? 0 : (p.closedIssues / totalIssues) * 100,
             percentCss = percentComplete + '%',
 
-            progressbar = p.key === "none" ? null :
+            progressbar = p.number === "none" ? null :
                 <div className="progress">
                     <div className="progress-bar progress-bar-success" 
                          role="progressbar" 
@@ -51,6 +51,12 @@ module.exports = React.createClass({
                               closed={i.state == "closed"} />;
                 });
 
+            var issuesElement = issues;
+            if(!p.expanded)
+            {
+                issuesElement = <a onClick={this.expand}>Show Issues</a>;
+            }
+
         return (
             <div className="panel panel-info issues-container__column"
                  onDragOver={this.dragOver} onDragEnter={this.dragEnter} 
@@ -64,12 +70,16 @@ module.exports = React.createClass({
                     {progressbar}
                     {p.description}
                     <ul className="list-group">
-                        {s.dragOver ? <li className="issue-placeholder"></li> : null}
-                        {issues}
+                        { s.dragOver ? <li className="issue-placeholder"></li> : null }
+                        {issuesElement}
                     </ul>
                 </div>
 
             </div>
         );
+    },
+    expand: function() {
+        var p = this.props;
+        p.onExpand(p.index);
     }
 });

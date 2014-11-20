@@ -25,7 +25,6 @@ if(currentKey === null || currentKey === "null")
 
 var App = React.createClass({
     render: function () {
-        console.log(this.props.activeRouteHandler)
         return (
             <div id="app">
                 <Navbar loggedIn={false}/>

@@ -37,51 +37,32 @@ module.exports = React.createClass({
             .then(result => {
                 //we always want the "no milestone" column first
                 result.data.unshift(NULL_MILESTONE);
-                //need to request all the issues for each milestone
-                Promise.all(result.data.map(component.enrichMilestone))
-                       .then(milestones => {
-                            if(this.isMounted())
-                                this.setState({ loading: false, milestones: milestones});
-                        });
+                
+                var milestones = result.data.map(component.createMilestone);
+                this.setState({ loading: false, milestones: milestones});
+
+                //download issues for the expanded milestones
+                milestones.map((m,i) => {
+                    if(m.expanded)
+                        this.expandMilestone(i);
+                });
             }, function (error) {
                 console.log("github error:", error);
                 alert(error);
             });
     },
     //downloads the issues for this milestone, returns a promise
-    enrichMilestone: function (m) {
-        var org = this.props.params.organisation,
-            repo = this.props.params.repository;
-
-        return Github.getMilestoneIssues(org,repo,m.number)
-                .then(result => {
-                    return {
-                        number: m.number,
-                        state: m.state,
-                        title: m.title,
-                        description: m.description,
-                        openIssues: m.open_issues,
-                        closedIssues: m.closed_issues,
-
-                        //then for each issue
-                        issues: result.data.map(
-
-                            i => {
-                                return {
-                                    number: i.number,
-                                    state: i.state,
-                                    title: i.title,
-                                    labels: i.labels,
-                                    body: i.body,
-                                    comments: i.comments,
-                                    assignee_avatar: i.assignee ?
-                                                     i.assignee.avatar_url :
-                                                     null //TODO: some placeholder?
-                                };
-                            }
-                        )
-                    };
-                }); 
+    createMilestone: function (m) {
+        return { 
+            number: m.number,
+            state: m.state,
+            title: m.title,
+            description: m.description,
+            openIssues: m.open_issues,
+            closedIssues: m.closed_issues,
+            expanded: m.state === 'open',
+            issues: []
+        };
     },
     render: function () {
         var s = this.state;
@@ -90,17 +71,21 @@ module.exports = React.createClass({
         if(s.loading) {
             return  <p>Loading repository...</p>;
         }
-        var milestones = s.milestones.map(m => {
+        var milestones = s.milestones.map(function(m,i) {
             return (
-                <Milestone key={m.number}
+                <Milestone key={i}
+                           index={i}
+                           number={m.number}
                            title={m.title}
                            description={m.description}
                            openIssues={m.openIssues}
                            closedIssues={m.closedIssues}
                            issues={m.issues}
-                           state={m.state} />
+                           state={m.state}
+                           expanded={m.expanded}
+                           onExpand={this.expandMilestone} />
             );
-        });
+        }, this);
 
         return (
             <div>
@@ -110,6 +95,34 @@ module.exports = React.createClass({
                 </div>
             </div>
         );
+    },
+    expandMilestone: function(index) {
+        console.log("expanding index", index);
+        var org = this.props.params.organisation,
+            repo = this.props.params.repository;
+        var milestones = this.state.milestones;
+        var milestone = milestones[index];
+
+        return Github.getMilestoneIssues(org,repo,milestone.number)
+            .then(result => {
+                milestone.issues = result.data.map(this.mapIssue);
+                milestone.expanded = true;
+                milestones[index] = milestone;
+                this.setState({ milestones: milestones });
+            });
+    },
+    mapIssue: function(i) {
+        return {
+            number: i.number,
+            state: i.state,
+            title: i.title,
+            labels: i.labels,
+            body: i.body,
+            comments: i.comments,
+            assignee_avatar: i.assignee ?
+                             i.assignee.avatar_url :
+                             null //TODO: some placeholder?
+        };
     }
 });
 
