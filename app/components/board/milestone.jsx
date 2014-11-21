@@ -31,15 +31,15 @@ module.exports = React.createClass({
             milestoneClasses = cx({
                 'panel': true,
                 'issues-container__column': true,
-                'panel-info': p.openIssues !== 0,
-                'panel-success': p.openIssues === 0 && p.number !== "none",
+                'panel-info': p.state !== "closed" && p.number !== "none",
+                'panel-success': p.state === "closed" && p.number !== "none",
                 'panel-default': p.number === "none"
             }),
 
             progressbarClasses = cx({
                 'progress-bar': true,
-                'progress-bar-info': p.state !== "closed",
-                'progress-bar-success': p.state === "closed"
+                'progress-bar-info': p.openIssues !== 0,
+                'progress-bar-success': p.openIssues === 0
             }),
 
             progressbar = p.number === "none" ? null :
