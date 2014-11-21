@@ -46,12 +46,13 @@ module.exports = React.createClass({
             issues = p.issues.map(i => 
             {
                 return <Issue key={i.number}
+                          number={i.number}
                           title={i.title}
                           assignee={i.assignee_avatar}
                           labels={i.labels}
                           comments={i.comments}
                           closed={i.state == "closed"}
-                          onIssueClicked={p.onIssueClicked} />;
+                          />;
             });
 
             var issuesElement = issues;

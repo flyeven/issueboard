@@ -40,6 +40,7 @@ React.render((
             <DefaultRoute handler={Organisations} />
             <Route name="organisation" path=":organisation" handler={Organisations}/>
             <Route name="board" path=":organisation/:repository" handler={Board} />
+            <Route name="issue" path=":organisation/:repository/:issue" handler={Board} />
         <NotFoundRoute handler={NotFound} />
         </Route>
         <DefaultRoute handler={Organisations} />

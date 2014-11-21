@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react/addons'),
-    BootstrapModalMixin = require('./modalmixin.jsx');
+    BootstrapModalMixin = require('./modalmixin.jsx'),
+    Github = require('../../api/github.js');
 
 module.exports = React.createClass({
     mixins: [BootstrapModalMixin],

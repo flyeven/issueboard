@@ -1,4 +1,5 @@
 var React = require('react/addons');
+var Router = require('react-router');
 var BreadCrumbs = require('../navigation/breadcrumbs.jsx');
 var Github = require('../../api/github.js');
 var Milestone = require('./milestone.jsx');
@@ -15,6 +16,7 @@ var NULL_MILESTONE =
     };
 
 module.exports = React.createClass({
+    mixins: [Router.Navigation],
     getInitialState: function () {
         return {
             loading: true,
@@ -22,8 +24,10 @@ module.exports = React.createClass({
         };
     },
     componentWillReceiveProps: function (props) {
-        console.log(props);
-        this.loadRepo(props.params.organisation, props.params.repository);
+        if(props.params.organisation !== this.props.params.organisation &&
+           props.params.repository !== this.props.params.repository) {
+            this.loadRepo(props.params.organisation, props.params.repository);
+        }       
     },
     componentDidMount: function () {
         this.loadRepo(this.props.params.organisation, this.props.params.repository);
@@ -47,13 +51,15 @@ module.exports = React.createClass({
                            issues={m.issues}
                            state={m.state}
                            expanded={m.expanded}
-                           onExpand={this.expandMilestone}
-                           onIssueClicked={this.showIssueDetails} />
+                           onExpand={this.expandMilestone} />
             );
         }, this);
 
-        var issueModal = s.modalIssue ? 
-                        <IssueDetails issue={s.modalIssue} 
+
+        var issueModal = p.params.issue ? 
+                        <IssueDetails issue={p.params.issue} 
+                                      organisation={p.params.organisation}
+                                      repo={p.params.repository}
                                       show={true}
                                       onClose={this.hideIssueDetails}
                                       handleHidden={this.issueDetailsHidden} />
@@ -132,11 +138,8 @@ module.exports = React.createClass({
                              null //TODO: some placeholder?
         };
     },
-    showIssueDetails: function(number) {
-        number = 1;
-        this.setState({modalIssue: number});
-    },
     issueDetailsHidden: function() {
+        this.transitionTo("board", { organisation: this.props.params.organisation, repository: this.props.params.repository })
         this.setState({modalIssue: undefined});
         //probably should refresh the milestone in case they made changes
     }

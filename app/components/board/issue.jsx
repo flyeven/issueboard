@@ -1,6 +1,8 @@
 var React = require('react/addons');
+var Router = require('react-router');
 
 module.exports = React.createClass({
+    mixins: [Router.Navigation, Router.CurrentPath],
     render: function () {
         var tags = [];
         var cx = React.addons.classSet;
@@ -19,7 +21,7 @@ module.exports = React.createClass({
         }
 
         return (
-            <li onClick={this.props.onIssueClicked} className={itemClasses} draggable="true" onDrag={this.drag} onDragStart={this.dragStart} onDragEnd={this.dragEnd} >
+            <li onClick={this.showDetails} className={itemClasses} draggable="true" onDrag={this.drag} onDragStart={this.dragStart} onDragEnd={this.dragEnd} >
                 <h5 className="issue__title">{this.props.title}</h5>
                 { this.props.assignee ? <p className="issue__assignee"><img src={this.props.assignee} /></p> : null }
                 <p className="issue__tags">
@@ -41,5 +43,8 @@ module.exports = React.createClass({
     dragEnd: function (event) {
         var el=this.getDOMNode();
         el.classList.remove('list-group-item--dragging');
+    },
+    showDetails: function () {
+        this.transitionTo(this.getCurrentPath() + "/" + this.props.number);
     }
 });
