@@ -50,7 +50,8 @@ module.exports = React.createClass({
                           assignee={i.assignee_avatar}
                           labels={i.labels}
                           comments={i.comments}
-                          closed={i.state == "closed"} />;
+                          closed={i.state == "closed"}
+                          onIssueClicked={p.onIssueClicked} />;
             });
 
             var issuesElement = issues;

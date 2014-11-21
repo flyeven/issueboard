@@ -2,6 +2,8 @@ var React = require('react/addons');
 var BreadCrumbs = require('../navigation/breadcrumbs.jsx');
 var Github = require('../../api/github.js');
 var Milestone = require('./milestone.jsx');
+var IssueDetails = require('./issuedetails.jsx');
+
 var NULL_MILESTONE =   
     {
         number: "none",
@@ -11,7 +13,6 @@ var NULL_MILESTONE =
         open_issues: 0,
         closed_issues: 0
     };
-
 
 module.exports = React.createClass({
     getInitialState: function () {
@@ -46,13 +47,22 @@ module.exports = React.createClass({
                            issues={m.issues}
                            state={m.state}
                            expanded={m.expanded}
-                           onExpand={this.expandMilestone} />
+                           onExpand={this.expandMilestone}
+                           onIssueClicked={this.showIssueDetails} />
             );
         }, this);
+
+        var issueModal = s.modalIssue ? 
+                        <IssueDetails issue={s.modalIssue} 
+                                      show={true}
+                                      onClose={this.hideIssueDetails}
+                                      handleHidden={this.issueDetailsHidden} />
+                        : null;
 
         return (
             <div>
                 <BreadCrumbs organisation={this.props.params.organisation} repository={this.props.params.repository}/>
+                {issueModal}
                 <div className="issues-container">
                     {milestones}
                 </div>
@@ -68,7 +78,7 @@ module.exports = React.createClass({
                     //we always want the "no milestone" column first
                     result.data.unshift(NULL_MILESTONE);
                     
-                    var milestones = result.data.map(component.createMilestone);
+                    var milestones = result.data.map(component.mapMilestone);
                     this.setState({ loading: false, milestones: milestones});
 
                     //download issues for the expanded milestones
@@ -97,7 +107,7 @@ module.exports = React.createClass({
             });
     },
     //converts github milestone to simplified version
-    createMilestone: function (m) {
+    mapMilestone: function (m) {
         return { 
             number: m.number,
             state: m.state,
@@ -109,7 +119,7 @@ module.exports = React.createClass({
             issues: []
         };
     },
-    createIssue: function(i) {
+    mapIssue: function(i) {
         return {
             number: i.number,
             state: i.state,
@@ -121,6 +131,14 @@ module.exports = React.createClass({
                              i.assignee.avatar_url :
                              null //TODO: some placeholder?
         };
+    },
+    showIssueDetails: function(number) {
+        number = 1;
+        this.setState({modalIssue: number});
+    },
+    issueDetailsHidden: function() {
+        this.setState({modalIssue: undefined});
+        //probably should refresh the milestone in case they made changes
     }
 });
 

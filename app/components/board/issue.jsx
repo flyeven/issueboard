@@ -19,7 +19,7 @@ module.exports = React.createClass({
         }
 
         return (
-            <li className={itemClasses} draggable="true" onDrag={this.drag} onDragStart={this.dragStart} onDragEnd={this.dragEnd} >
+            <li onClick={this.props.onIssueClicked} className={itemClasses} draggable="true" onDrag={this.drag} onDragStart={this.dragStart} onDragEnd={this.dragEnd} >
                 <h5 className="issue__title">{this.props.title}</h5>
                 { this.props.assignee ? <p className="issue__assignee"><img src={this.props.assignee} /></p> : null }
                 <p className="issue__tags">
