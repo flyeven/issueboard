@@ -22,14 +22,29 @@ module.exports = React.createClass({
     render: function () {
         var p = this.props,
             s = this.state,
+            cx = React.addons.classSet,
 
             totalIssues = p.openIssues + p.closedIssues,
             percentComplete = totalIssues === 0 ? 0 : (p.closedIssues / totalIssues) * 100,
             percentCss = percentComplete + '%',
 
+            milestoneClasses = cx({
+                'panel': true,
+                'issues-container__column': true,
+                'panel-info': p.openIssues !== 0,
+                'panel-success': p.openIssues === 0 && p.number !== "none",
+                'panel-default': p.number === "none"
+            }),
+
+            progressbarClasses = cx({
+                'progress-bar': true,
+                'progress-bar-info': p.state !== "closed",
+                'progress-bar-success': p.state === "closed"
+            }),
+
             progressbar = p.number === "none" ? null :
                 <div className="progress">
-                    <div className="progress-bar progress-bar-info" 
+                    <div className={progressbarClasses}
                          role="progressbar" 
                          aria-valuenow={percentComplete} 
                          aria-valuemin="0" 
@@ -42,23 +57,21 @@ module.exports = React.createClass({
                 </div>,
 
             issues = p.issues.map(i => 
-                {
-                    return <Issue key={i.number}
-                              title={i.title}
-                              assignee={i.assignee_avatar}
-                              labels={i.labels}
-                              comments={i.comments}
-                              closed={i.state == "closed"} />;
-                });
+            {
+                return <Issue key={i.number}
+                          title={i.title}
+                          assignee={i.assignee_avatar}
+                          labels={i.labels}
+                          comments={i.comments}
+                          closed={i.state == "closed"} />;
+            });
 
             var issuesElement = issues;
             if(!p.expanded)
-            {
                 issuesElement = <button className="btn btn-default show-issues" onClick={this.expand}>Show Issues</button>;
-            }
 
         return (
-            <div className="panel panel-info issues-container__column"
+            <div className={milestoneClasses}
                  onDragOver={this.dragOver} onDragEnter={this.dragEnter} 
                  onDragLeave={this.dragLeave} onDrop={this.drop}>
 
