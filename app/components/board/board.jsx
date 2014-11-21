@@ -27,41 +27,6 @@ module.exports = React.createClass({
     componentDidMount: function () {
         this.loadRepo(this.props.params.organisation, this.props.params.repository);
     },
-    loadRepo: function (org,repo) {
-        var component = this;
-        this.setState({ loading: true, milestones: [] });
-
-        Github.getMilestones(org, repo)
-            .then(result => {
-                //we always want the "no milestone" column first
-                result.data.unshift(NULL_MILESTONE);
-                
-                var milestones = result.data.map(component.createMilestone);
-                this.setState({ loading: false, milestones: milestones});
-
-                //download issues for the expanded milestones
-                milestones.map((m,i) => {
-                    if(m.expanded)
-                        this.expandMilestone(i);
-                });
-            }, function (error) {
-                console.log("github error:", error);
-                alert(error);
-            });
-    },
-    //downloads the issues for this milestone, returns a promise
-    createMilestone: function (m) {
-        return { 
-            number: m.number,
-            state: m.state,
-            title: m.title,
-            description: m.description,
-            openIssues: m.open_issues,
-            closedIssues: m.closed_issues,
-            expanded: m.state === 'open',
-            issues: []
-        };
-    },
     render: function () {
         var s = this.state;
         var p = this.props;
@@ -94,8 +59,30 @@ module.exports = React.createClass({
             </div>
         );
     },
+    loadRepo: function (org,repo) {
+            var component = this;
+            this.setState({ loading: true, milestones: [] });
+
+            Github.getMilestones(org, repo)
+                .then(result => {
+                    //we always want the "no milestone" column first
+                    result.data.unshift(NULL_MILESTONE);
+                    
+                    var milestones = result.data.map(component.createMilestone);
+                    this.setState({ loading: false, milestones: milestones});
+
+                    //download issues for the expanded milestones
+                    milestones.map((m,i) => {
+                        if(m.expanded)
+                            this.expandMilestone(i);
+                    });
+                }, function (error) {
+                    console.log("github error:", error);
+                    alert(error);
+                });
+    },
+    //downloads the issues for this milestone (async)
     expandMilestone: function(index) {
-        console.log("expanding index", index);
         var org = this.props.params.organisation,
             repo = this.props.params.repository;
         var milestones = this.state.milestones;
@@ -109,7 +96,20 @@ module.exports = React.createClass({
                 this.setState({ milestones: milestones });
             });
     },
-    mapIssue: function(i) {
+    //converts github milestone to simplified version
+    createMilestone: function (m) {
+        return { 
+            number: m.number,
+            state: m.state,
+            title: m.title,
+            description: m.description,
+            openIssues: m.open_issues,
+            closedIssues: m.closed_issues,
+            expanded: m.state === 'open',
+            issues: []
+        };
+    },
+    createIssue: function(i) {
         return {
             number: i.number,
             state: i.state,

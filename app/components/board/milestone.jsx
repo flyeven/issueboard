@@ -6,19 +6,6 @@ module.exports = React.createClass({
     getInitialState: function () {
         return { dragOver: 0 };
     },
-    dragOver: function (event) {
-        event.preventDefault();
-    },
-    dragEnter: function (event) {
-        event.preventDefault();
-        this.setState({dragOver: this.state.dragOver + 1});
-    },
-    dragLeave: function (event) {
-        this.setState({dragOver: this.state.dragOver - 1});
-    },
-    drop: function (event) {
-        this.setState({dragOver: 0});
-    },
     render: function () {
         var p = this.props,
             s = this.state,
@@ -94,5 +81,18 @@ module.exports = React.createClass({
     expand: function() {
         var p = this.props;
         p.onExpand(p.index);
-    }
+    },
+    dragOver: function (event) {
+        event.preventDefault();
+    },
+    dragEnter: function (event) {
+        event.preventDefault();
+        this.setState({dragOver: this.state.dragOver + 1});
+    },
+    dragLeave: function (event) {
+        this.setState({dragOver: this.state.dragOver - 1});
+    },
+    drop: function (event) {
+        this.setState({dragOver: 0});
+    },
 });

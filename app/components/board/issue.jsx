@@ -43,8 +43,3 @@ module.exports = React.createClass({
         el.classList.remove('list-group-item--dragging');
     }
 });
-
-
-//drag data contains callback
-//source receives updated issue as well as dest
-//can fix things if the issue doesnt actually update
