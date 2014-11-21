@@ -29,7 +29,7 @@ module.exports = React.createClass({
 
             progressbar = p.number === "none" ? null :
                 <div className="progress">
-                    <div className="progress-bar progress-bar-success" 
+                    <div className="progress-bar progress-bar-info" 
                          role="progressbar" 
                          aria-valuenow={percentComplete} 
                          aria-valuemin="0" 
@@ -54,7 +54,7 @@ module.exports = React.createClass({
             var issuesElement = issues;
             if(!p.expanded)
             {
-                issuesElement = <a onClick={this.expand}>Show Issues</a>;
+                issuesElement = <button className="btn btn-default show-issues" onClick={this.expand}>Show Issues</button>;
             }
 
         return (
