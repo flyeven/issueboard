@@ -27,6 +27,7 @@ function getMilestoneIssues(org, repo, milestone) {
 }
 
 function getIssue(org,repo,number) {
+    console.log("GET ISSUE", org, repo, number);
     return sendRequest("/repos/" + org + "/" + repo + "/issues/" + number);
 }
 

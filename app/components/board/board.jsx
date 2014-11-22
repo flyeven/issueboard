@@ -55,11 +55,10 @@ module.exports = React.createClass({
             );
         }, this);
 
-
         var issueModal = p.params.issue ? 
-                        <IssueDetails issue={p.params.issue} 
+                        <IssueDetails number={p.params.issue} 
                                       organisation={p.params.organisation}
-                                      repo={p.params.repository}
+                                      repository={p.params.repository}
                                       show={true}
                                       onClose={this.hideIssueDetails}
                                       handleHidden={this.issueDetailsHidden} />
@@ -126,6 +125,7 @@ module.exports = React.createClass({
         };
     },
     mapIssue: function(i) {
+        console.log("ISSUE:", i);
         return {
             number: i.number,
             state: i.state,

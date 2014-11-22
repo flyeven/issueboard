@@ -8,8 +8,15 @@ module.exports = React.createClass({
     getInitialState: function() {
         return { loading: true };
     },
-    componendDidMount: function () {
+    componentDidMount: function () {
+        var p = this.props;
         console.log('mounting');
+        Github.getIssue(p.organisation, p.repository, p.number)
+        .then(function(result) {
+            console.log("ISSUE RESULT",result);
+            console.log(this.setState);
+            this.setState({ loading: false, issueData: result.data });
+        }.bind(this));
     },
     render: function() {
         var s = this.state;
@@ -23,17 +30,21 @@ module.exports = React.createClass({
                     });
         }
         
+        console.log("WOFTAM", s.loading);
         var title = s.loading ? 
                     <strong>Loading Issue...</strong> : 
-                    <strong>{s.issue.title}</strong>;
+                    <strong>{s.issueData.title}</strong>;
 
+        console.log("ISSUE DATA IN RENDER",s.issueData);
+        var text = JSON.stringify(s.issueData,null," ");
+        console.log(text);
         var body = s.loading ?
                     (
                         <div className="progress" style={{"width": "40%", "margin": "auto"}}>
                             <div className="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}} />
                         </div>
                     ) : (
-                        <h1>Some issue</h1>
+                        <pre>{text}</pre>
                     );
 
         return <div className="modal fade">
