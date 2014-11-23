@@ -63,11 +63,8 @@ module.exports = React.createClass({
         return <div className="modal fade">
           <div className="modal-dialog">
             <div className="modal-content">
-              <div className="modal-header">
-                {this.renderCloseButton()}
-                {title}
-              </div>
               <div className="modal-body">
+                <h3>{title}</h3>
                 {body}
               </div>
               <div className="modal-footer">

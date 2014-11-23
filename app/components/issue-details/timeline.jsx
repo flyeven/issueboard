@@ -42,7 +42,7 @@ var TimelineItem = React.createClass({
                 <div className="timeline-badge info">
                     <i className={iconClass}></i>
                 </div>
-                <div className="panel panel-default timeline-panel">
+                <div className="panel panel-info timeline-panel">
                     <div className="panel-heading">
                         <h5 className="panel-title timeline-title">
                             {title}

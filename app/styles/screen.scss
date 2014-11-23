@@ -8,6 +8,11 @@ body {
     margin-left: 0px;
     color: #ADAFB1 !important;
 }
+
+.modal-body h3 {
+    margin-top: 0px;
+}
+
 .panel-body {
     max-height: calc(100vh - 178px);
     white-space: normal;
