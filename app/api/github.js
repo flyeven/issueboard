@@ -1,12 +1,35 @@
-module.exports = {
-    getOrganisations: getOrganisations,
-    getOrganisationRepositories: getOrganisationRepositories,
-    getMilestones: getMilestones,
-    getMilestoneIssues: getMilestoneIssues,
-    getIssue: getIssue,
-    getIssueEvents: getIssueEvents,
-    getIssueComments: getIssueComments
-};
+var Fake = require('./fakedata.js');
+var RunOffline = true;
+if(RunOffline)
+{
+    module.exports = {
+        getOrganisations: function() {
+            return fakeResult( Fake.organisations );
+        },
+        getOrganisationRepositories: function() {
+            return fakeResult( Fake.repositories );
+        },
+        getMilestones: function() {
+            return fakeResult( Fake.milestones );
+        },
+        getMilestoneIssues: function() {
+            return fakeResult( Fake.issues );
+        },
+        getIssue: function(org,repo,number) {
+            return fakeResult( Fake.issues[number] );
+        }
+    };  
+} else {
+    module.exports = {
+        getOrganisations: getOrganisations,
+        getOrganisationRepositories: getOrganisationRepositories,
+        getMilestones: getMilestones,
+        getMilestoneIssues: getMilestoneIssues,
+        getIssue: getIssue,
+        getIssueEvents: getIssueEvents,
+        getIssueComments: getIssueComments
+    };
+}
 
 var API_BASE = "https://api.github.com";
 
@@ -85,4 +108,17 @@ function sendRequest(url, action)
 function errorMessage(result) {
     //TODO: real implementation of this rather than just using github errors
     return result.data.message; //this will be an error message
+}
+
+function fakeResult(data) {
+    return Promise.resolve({
+        success: true,
+        status: 200,
+        data: data,
+        rateLimit: {
+            limit: 1000,
+            remaining: 1000,
+            reset: 1000
+        }
+    });
 }

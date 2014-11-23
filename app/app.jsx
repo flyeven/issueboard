@@ -1,3 +1,5 @@
+window.Offline = true;
+
 var React = require('react');
 var Router = require('react-router');
 var Github = require('./api/github.js');

@@ -4,5 +4,6 @@
     "globals": {
         "require": false,
         "stream": false
-    }
+    },
+    "esnext": true
 }
