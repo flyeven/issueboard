@@ -11,12 +11,51 @@ module.exports = React.createClass({
     componentDidMount: function () {
         var p = this.props;
         console.log('mounting');
-        Github.getIssue(p.organisation, p.repository, p.number)
-        .then(function(result) {
-            console.log("ISSUE RESULT",result);
-            console.log(this.setState);
-            this.setState({ loading: false, issueData: result.data });
+        var parts = [
+            Github.getIssue(p.organisation, p.repository, p.number),
+            Github.getIssueEvents(p.organisation, p.repository, p.number),
+            Github.getIssueComments(p.organisation, p.repository, p.number)
+        ];
+        Promise.all(parts).then(function(parts) {
+            //want to merge events and comments into one stream
+
+            //while filtering out certain event types
+
+            this.setState({ loading: false, issueData: parts[0], events: parts[1], comments: parts[2]});
         }.bind(this));
+    },
+    //these should all return a dom element describing the event
+    eventFormatters: {
+        'closed': 
+            e => { return null; }, //issue closed
+         'reopened':
+            e => { return null; }, //issue reopened
+         'merged':
+            e => { return null; }, //pull request merged
+         'referenced':
+            e => { return null; }, //from a commit
+         'mentioned':
+            e => { return null; }, //in another issue
+         'assigned':
+            e => { return null; }, //to an actor, by an actor
+         'unassigned':
+            e => { return null; }, //by an actor
+         'milestoned':
+            e => { return null; }, //by an actor
+         'demilestoned':
+            e => { return null; }, //by an actor
+         'labelled':
+            e => { return null; }, //by an actor
+         'unlabelled':
+            e => { return null; }, //by an actor
+         'renamed':
+            e => { return null; }, //by an actor
+         'locked':
+            e => { return null; }, //by an actor
+         'head_ref_deleted':
+            e => { return null; }, //for a pull req, by an actor
+         'head_ref_restored':
+            e => { return null; }, //for a pull req, by an actor
     },
     render: function() {
         var s = this.state;
@@ -29,14 +68,15 @@ module.exports = React.createClass({
                       </button>;
                     });
         }
-        
-        console.log("WOFTAM", s.loading);
+    
         var title = s.loading ? 
                     <strong>Loading Issue...</strong> : 
                     <strong>{s.issueData.title}</strong>;
 
         console.log("ISSUE DATA IN RENDER",s.issueData);
         var text = JSON.stringify(s.issueData,null," ");
+        var events = JSON.stringify(s.events,null," ");
+        var comments = JSON.stringify(s.comments, null, " ");
         console.log(text);
         var body = s.loading ?
                     (
@@ -44,7 +84,11 @@ module.exports = React.createClass({
                             <div className="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}} />
                         </div>
                     ) : (
-                        <pre>{text}</pre>
+                        <div>
+                            <pre>{text}</pre>
+                            <pre>{events}</pre>
+                            <pre>{comments}</pre>
+                        </div>
                     );
 
         return <div className="modal fade">

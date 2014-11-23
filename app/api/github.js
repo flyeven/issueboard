@@ -3,7 +3,9 @@ module.exports = {
     getOrganisationRepositories: getOrganisationRepositories,
     getMilestones: getMilestones,
     getMilestoneIssues: getMilestoneIssues,
-    getIssue: getIssue
+    getIssue: getIssue,
+    getIssueEvents: getIssueEvents,
+    getIssueComments: getIssueComments
 };
 
 var API_BASE = "https://api.github.com";
@@ -27,8 +29,15 @@ function getMilestoneIssues(org, repo, milestone) {
 }
 
 function getIssue(org,repo,number) {
-    console.log("GET ISSUE", org, repo, number);
     return sendRequest("/repos/" + org + "/" + repo + "/issues/" + number);
+}
+
+function getIssueEvents(org,repo,number) {
+    return sendRequest("/repos/" + org + "/" + repo + "/issues/" + number + "/events");
+}
+
+function getIssueComments(org,repo,number) {
+    return sendRequest("/repos/" + org + "/" + repo + "/issues/" + number + "/comments");
 }
 
 function sendRequest(url, action)
