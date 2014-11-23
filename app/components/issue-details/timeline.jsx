@@ -39,10 +39,10 @@ var TimelineItem = React.createClass({
         console.log(body);
         return (
             <li className="timeline-inverted">
-                <div className="timeline-badge info">
+                <div className="timeline-badge default">
                     <i className={iconClass}></i>
                 </div>
-                <div className="panel panel-info timeline-panel">
+                <div className="panel panel-default timeline-panel">
                     <div className="panel-heading">
                         <h5 className="panel-title timeline-title">
                             {title}
