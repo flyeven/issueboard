@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react/addons'),
     BootstrapModalMixin = require('./modalmixin.jsx'),
+    Timeline = require('./timeline.jsx'),
     Github = require('../../api/github.js');
 
 module.exports = React.createClass({
@@ -20,42 +21,9 @@ module.exports = React.createClass({
             //want to merge events and comments into one stream
 
             //while filtering out certain event types
-
-            this.setState({ loading: false, issueData: parts[0], events: parts[1], comments: parts[2]});
+            
+            this.setState({ loading: false, issueData: parts[0].data, events: parts[1].data, comments: parts[2].data});
         }.bind(this));
-    },
-    //these should all return a dom element describing the event
-    eventFormatters: {
-        'closed': 
-            e => { return null; }, //issue closed
-         'reopened':
-            e => { return null; }, //issue reopened
-         'merged':
-            e => { return null; }, //pull request merged
-         'referenced':
-            e => { return null; }, //from a commit
-         'mentioned':
-            e => { return null; }, //in another issue
-         'assigned':
-            e => { return null; }, //to an actor, by an actor
-         'unassigned':
-            e => { return null; }, //by an actor
-         'milestoned':
-            e => { return null; }, //by an actor
-         'demilestoned':
-            e => { return null; }, //by an actor
-         'labelled':
-            e => { return null; }, //by an actor
-         'unlabelled':
-            e => { return null; }, //by an actor
-         'renamed':
-            e => { return null; }, //by an actor
-         'locked':
-            e => { return null; }, //by an actor
-         'head_ref_deleted':
-            e => { return null; }, //for a pull req, by an actor
-         'head_ref_restored':
-            e => { return null; }, //for a pull req, by an actor
     },
     render: function() {
         var s = this.state;
@@ -85,6 +53,7 @@ module.exports = React.createClass({
                         </div>
                     ) : (
                         <div>
+                            <Timeline events={s.events} heading="Activity"/>
                             <pre>{text}</pre>
                             <pre>{events}</pre>
                             <pre>{comments}</pre>

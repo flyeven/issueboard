@@ -3,7 +3,7 @@ var Router = require('react-router');
 var BreadCrumbs = require('../navigation/breadcrumbs.jsx');
 var Github = require('../../api/github.js');
 var Milestone = require('./milestone.jsx');
-var IssueDetails = require('./issuedetails.jsx');
+var IssueDetails = require('../issue-details/issuedetails.jsx');
 
 var NULL_MILESTONE =   
     {

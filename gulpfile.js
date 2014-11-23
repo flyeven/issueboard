@@ -27,7 +27,7 @@ var dist = 'dist';
 var htmlFiles = './app/**/*.html';
 var jsxFiles = './app/**/*.jsx';
 var entryFile = './app/app.jsx';
-var scssFile = './app/styles/screen.scss';
+var scssFiles = './app/styles/*.scss';
 
 var config = {
     debug: false
@@ -59,7 +59,7 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('styles', function() {
-  return gulp.src(scssFile)
+  return gulp.src(scssFiles)
     .pipe(sass({ style: 'compressed' }))
     .pipe(gulp.dest(dist));
 });
@@ -138,7 +138,7 @@ gulp.task('watch', function () {
 
     compileScripts(true);
     initWatch(htmlFiles, 'html');
-    initWatch(scssFile, 'styles')
+    initWatch(scssFiles, 'styles')
 
     gulp.watch([dist + '/**/*'], reloadPage);
 });
