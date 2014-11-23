@@ -10,8 +10,10 @@ module.exports= React.createClass({
             return EventFormatters[e.event] !== undefined;
         }).map(e => {
             var icon = EventIcons[e.event];
-            var heading = "Something happened";
-            var body = EventFormatters[e.event](e);
+            var format = EventFormatters[e.event](e);
+            var heading = format.heading;
+            var body = format.body;
+
             return (
                 <TimelineItem icon={icon} title={heading} body={body} />
             );
@@ -41,12 +43,17 @@ var TimelineItem = React.createClass({
                     <i className={iconClass}></i>
                 </div>
                 <div className="panel panel-default timeline-panel">
-                    <div className = "timeline-body">
-                        <h5 className="timeline-title">
+                    <div className="panel-heading">
+                        <h5 className="panel-title timeline-title">
                             {title}
                         </h5>
+                    </div>
+                    { body ? 
+                    <div className = "panel-body timeline-body">
                         {body}
                     </div>
+                    :
+                    null }
                 </div>
             </li>
         );
@@ -77,33 +84,85 @@ var EventIcons = {
 //these map the various event types to a description
 var EventFormatters = {
         'closed': 
-            e => { return null; }, //issue closed
+            e => { return {
+                    heading: "Issue Closed",
+                    body: null
+                };
+            },
         'reopened':
-            e => { return <p>Not implemented</p>; }, //issue reopened
+            e => { return {
+                    heading: "Issue Re-opened",
+                    body: null
+                };
+            },
         'merged':
-            e => { return <p>Not implemented</p>; }, //pull request merged
+            e => { return {
+                    heading: "Pull request merged",
+                    body: null
+                };
+            },
         'referenced':
-            e => { return <p>Not implemented</p>; }, //from a commit
+            e => { return {
+                    heading: "This issue was referenced in a commit",
+                    body: <p>
+                            <h5>Commit #123123123</h5>
+                            Commit message
+                          </p>
+                };
+            },
         'mentioned':
-            e => { return <p>Not implemented</p>; }, //in another issue
+            e => { return {
+                    heading: "Mentioned in a comment"
+                };
+            },
         'assigned':
-            e => { return <p>Not implemented</p>; }, //to an actor, by an actor
+            e => { return {
+                    heading: "Assigned to XXXX"
+                };
+            },        
         'unassigned':
-            e => { return <p>Not implemented</p>; }, //by an actor
+            e => { return {
+                    heading: "Unassigned"
+                };
+            },
         'milestoned':
-            e => { return <p>Not implemented</p>; }, //by an actor
+            e => { return {
+                    heading: "Added to milestone XXX"
+                };
+            },
         'demilestoned':
-            e => { return <p>Not implemented</p>; }, //by an actor
+            e => { return {
+                    heading: "Removed from milestone"
+                };
+            },
         'labeled':
-            e => { return <p>Not implemented</p>; }, //by an actor
+            e => { return {
+                    heading: "Label XXX added"
+                };
+            },
         'unlabeled':
-            e => { return <p>Not implemented</p>; }, //by an actor
+            e => { return {
+                    heading: "Label XXX removed"
+                };
+            },
         'renamed':
-            e => { return <p>Not implemented</p>; }, //by an actor
+            e => { return {
+                    heading: "Title Changed"
+                };
+            },
         'locked':
-            e => { return <p>Not implemented</p>; }, //by an actor
+            e => { return {
+                    heading: "Issue Locked"
+                };
+            },
         'head_ref_deleted':
-            e => { return <p>Not implemented</p>; }, //for a pull req, by an actor
+            e => { return {
+                    heading: "Not Implemented"
+                };
+            },
         'head_ref_restored':
-            e => { return <p>Not implemented</p>; }, //for a pull req, by an actor
+            e => { return {
+                    heading: "Not Implemented"
+                };
+            },
 };
