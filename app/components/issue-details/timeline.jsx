@@ -3,24 +3,49 @@ var React = require('react/addons');
 //passed list of events as props?
 module.exports= React.createClass({
     render: function() {
-        var events = this.props.events;
+        var issueEvents = this.props.issueEvents;
         var heading = this.props.heading;
 
-        var eventNodes = events.filter(e => {
-            return EventFormatters[e.event] !== undefined;
-        }).map(e => {
-            var icon = EventIcons[e.event];
-            var format = EventFormatters[e.event](e);
-            var heading = format.heading;
-            var body = format.body;
+        console.log("RENDERING TIMELINE");
 
-            return (
-                <TimelineItem icon={icon} title={heading} body={body} />
-            );
-        });
+        var eventList = issueEvents.filter(e => {
+           
+            //only if this is a supported event type for the timeline
+            var filter = EventFormatters[e.event] !== undefined;
+            console.log("FORMATTER:", e.event, filter);
+            return filter;
+        }).reduce((s,e) => {
+            console.log("REDUCING", e.event);
+            if(e.commit_id !== undefined)
+            {
+                e.commits = [ { id: e.commit_id, created_at: e.created_at } ];
+            }
+
+            //merge consecutive commit things
+            if(s.length > 0 && e.event === "referenced" && s[s.length - 1].event === "referenced")
+            {
+                s[s.length - 1].commits.add({ id: e.commit_id, created_at: e.created_at });
+                //just return, don't add a new entry for this
+                return s;
+            }
+            s.push(e);
+            return s;
+        }, []);
+
+        var eventNodes = eventList.map(e => {
+            console.log(e.event);
+            if(e.event === "comment")
+            {
+                return <Comment event={e} />;
+            } else {
+                return <TimelineItem event={e} />;
+            }
+        }
+        );
 
         return (
-            <div class="timeline-container">
+
+            <div className="timeline-container">
                 <h4>{heading}</h4>
                 <ul className="timeline">
                     {eventNodes}
@@ -30,34 +55,52 @@ module.exports= React.createClass({
     }
 });
 
-var TimelineItem = React.createClass({
+var Comment = React.createClass({
     render: function() {
-        console.log("Rendering item");
-        var iconClass = this.props.icon;
-        var title = this.props.title;
-        var body = this.props.body;
-        console.log(body);
+        var e = this.props.event;
+        var iconClass = EventIcons[e.event];
+        var body = EventFormatters[e.event](e).body;
+        console.log(iconClass, body);
         return (
-            <li className="timeline-inverted">
-                <div className="timeline-badge default">
+            <li className="timeline-comment">
+                <div className="timeline-badge info">
                     <i className={iconClass}></i>
                 </div>
-                <div className="panel panel-default timeline-panel">
+                <div className="panel panel-info">
                     <div className="panel-heading">
-                        <h5 className="panel-title timeline-title">
-                            {title}
-                        </h5>
+                        <h3 className="panel-title">
+                        Someone commented
+                        </h3>
                     </div>
-                    { body ? 
-                    <div className = "panel-body timeline-body">
+                    <div className="panel-body">
                         {body}
                     </div>
-                    :
-                    null }
                 </div>
             </li>
         );
+    }
+});
 
+var TimelineItem = React.createClass({
+    render: function() {
+
+        var e = this.props.event;
+        var type = this.props.pullRequest ? 
+                    "pull request" :
+                    "issue";
+
+        var iconClass = EventIcons[e.event];
+
+        var body = EventFormatters[e.event](e, type).body;
+        console.log(iconClass, body);
+        return (
+            <li>
+                <div className="timeline-badge default">
+                    <i className={iconClass}></i>
+                </div>
+                <p>{body}</p>
+            </li>
+        );
     }
 });
 
@@ -83,86 +126,90 @@ var EventIcons = {
 
 //these map the various event types to a description
 var EventFormatters = {
+        'comment': (e,issueType) => {
+            console.log("formatting comment", e);
+            return {
+                body: e.body
+            };
+        },
         'closed': 
-            e => { return {
-                    heading: "Issue Closed",
-                    body: null
+            (e,issueType) => {
+                return {
+                    body: `closed this ${ issueType }`
                 };
             },
         'reopened':
-            e => { return {
-                    heading: "Issue Re-opened",
-                    body: null
+            (e,issueType) => { return {
+                    body: `reopened this ${ issueType }`
                 };
             },
         'merged':
             e => { return {
-                    heading: "Pull request merged",
-                    body: null
+                    body: "merged this pull request"
                 };
             },
         'referenced':
-            e => { return {
-                    heading: "This issue was referenced in a commit",
+            (e,issueType) => { return {
+                    heading: "added some commits",
                     body: <p>
-                            <h5>Commit #123123123</h5>
+                            <h5></h5>
                             Commit message
                           </p>
                 };
             },
         'mentioned':
-            e => { return {
-                    heading: "Mentioned in a comment"
+            (e,issueType) => { return {
+                    body: `reopened this ${ issueType }`
                 };
             },
         'assigned':
-            e => { return {
-                    heading: "Assigned to XXXX"
+            (e,issueType) => { return {
+                    body: "Assigned to XXXX"
                 };
             },        
         'unassigned':
-            e => { return {
-                    heading: "Unassigned"
+            (e,issueType) => { return {
+                    body: "Unassigned"
                 };
             },
         'milestoned':
-            e => { return {
-                    heading: "Added to milestone XXX"
+            (e,issueType) => { return {
+                    body: "Added to milestone XXX"
                 };
             },
         'demilestoned':
-            e => { return {
-                    heading: "Removed from milestone"
+            (e,issueType) => { return {
+                    body: "Removed from milestone"
                 };
             },
         'labeled':
-            e => { return {
-                    heading: "Label XXX added"
+            (e,issueType) => { return {
+                    body: "Label XXX added"
                 };
             },
         'unlabeled':
-            e => { return {
-                    heading: "Label XXX removed"
+            (e,issueType) => { return {
+                    body: "Label XXX removed"
                 };
             },
         'renamed':
-            e => { return {
-                    heading: "Title Changed"
+            (e,issueType) => { return {
+                    body: "Title Changed"
                 };
             },
         'locked':
-            e => { return {
-                    heading: "Issue Locked"
+            (e,issueType) => { return {
+                    body: "Issue Locked"
                 };
             },
         'head_ref_deleted':
-            e => { return {
-                    heading: "Not Implemented"
+            (e,issueType) => { return {
+                    body: "Not Implemented"
                 };
             },
         'head_ref_restored':
-            e => { return {
-                    heading: "Not Implemented"
+            (e,issueType) => { return {
+                    body: "Not Implemented"
                 };
             },
 };

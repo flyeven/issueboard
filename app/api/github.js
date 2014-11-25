@@ -1,5 +1,5 @@
 var Fake = require('./fakedata.js');
-var RunOffline = true;
+var RunOffline = false;
 if(RunOffline)
 {
     module.exports = {
@@ -17,6 +17,12 @@ if(RunOffline)
         },
         getIssue: function(org,repo,number) {
             return fakeResult( Fake.issues[number] );
+        },
+        getIssueEvents: function() {
+            return fakeResult( Fake.events );
+        },
+        getIssueComments: function() {
+            return fakeResult( Fake.comments );
         }
     };  
 } else {
@@ -25,7 +31,7 @@ if(RunOffline)
         getOrganisationRepositories: getOrganisationRepositories,
         getMilestones: getMilestones,
         getMilestoneIssues: getMilestoneIssues,
-        getIssue: getIssue,
+        getIssue: getIssue, 
         getIssueEvents: getIssueEvents,
         getIssueComments: getIssueComments
     };

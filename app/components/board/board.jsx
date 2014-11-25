@@ -125,7 +125,6 @@ module.exports = React.createClass({
         };
     },
     mapIssue: function(i) {
-        console.log("ISSUE:", i);
         return {
             number: i.number,
             state: i.state,

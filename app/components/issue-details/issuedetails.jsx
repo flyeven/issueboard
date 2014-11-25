@@ -19,15 +19,24 @@ module.exports = React.createClass({
         ];
         Promise.all(parts).then(function(parts) {
             //want to merge events and comments into one stream
-
             //while filtering out certain event types
-            
-            this.setState({ loading: false, issueData: parts[0].data, events: parts[1].data, comments: parts[2].data});
+            var mixedEvents = parts[1].data.concat(parts[2].data.map(
+                                                c => {
+                                                    //make comments look something like normal events
+                                                    c.event = "comment";
+                                                    c.actor = c.user;
+                                                    return c;
+                                                }))
+                                            .sort((x,y) => 
+                                                        new Date(x.created_at) -
+                                                        new Date(y.created_at));
+
+            this.setState({ loading: false, issueData: parts[0].data, events: mixedEvents });
         }.bind(this));
     },
     render: function() {
         var s = this.state;
-        var buttons = [];
+        var buttons = [{ type: "primary", text: "Close Issue" }];
         if(this.props.buttons !== undefined)
         {
             buttons = this.props.buttons.map(function(button) {
@@ -41,11 +50,15 @@ module.exports = React.createClass({
                     <strong>Loading Issue...</strong> : 
                     <strong>{s.issueData.title}</strong>;
 
-        console.log("ISSUE DATA IN RENDER",s.issueData);
         var text = JSON.stringify(s.issueData,null," ");
         var events = JSON.stringify(s.events,null," ");
         var comments = JSON.stringify(s.comments, null, " ");
-        console.log(text);
+        console.log("Rendering issue details. Loading:", s.loading);
+
+        var bodyText = "No Description Given";
+        if(s.issueData !== undefined && s.issueData.body !== "")
+            bodyText = s.issueData.body;
+
         var body = s.loading ?
                     (
                         <div className="progress" style={{"width": "40%", "margin": "auto"}}>
@@ -53,23 +66,25 @@ module.exports = React.createClass({
                         </div>
                     ) : (
                         <div>
-                            <Timeline events={s.events} heading="Activity"/>
-                            <pre>{text}</pre>
-                            <pre>{events}</pre>
-                            <pre>{comments}</pre>
+                            <p>{bodyText}</p>
+                            <Timeline issueEvents={s.events} heading="Activity"/>
                         </div>
                     );
 
         return <div className="modal fade">
           <div className="modal-dialog">
             <div className="modal-content">
+              <div className="modal-header">
+                <h4 class="modal-title">{title}</h4>
+              </div>
               <div className="modal-body">
-                <h3>{title}</h3>
                 {body}
               </div>
+              { !s.loading ? 
               <div className="modal-footer">
                 {buttons}
               </div>
+              : null }
             </div>
           </div>
         </div>;

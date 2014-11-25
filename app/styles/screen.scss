@@ -16,7 +16,7 @@ body {
 .panel-body {
     max-height: calc(100vh - 178px);
     white-space: normal;
-    overflow-y: scroll;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     .list-group {
         margin: 20px -15px 0 !important;
