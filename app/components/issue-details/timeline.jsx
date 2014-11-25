@@ -67,14 +67,10 @@ var Comment = React.createClass({
         console.log(iconClass, body);
         return (
             <li className="timeline-comment">
-                <div className="timeline-badge info">
-                    <i className={iconClass}></i>
-                </div>
+                {getTimelineBadge(e)}
                 <div className="panel panel-info">
                     <div className="panel-heading">
-                        <h3 className="panel-title">
-                        Someone commented
-                        </h3>
+                        <strong>{e.actor.login} commented</strong>
                     </div>
                     <div className="panel-body">
                         {body}
