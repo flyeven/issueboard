@@ -34,6 +34,10 @@ module.exports= React.createClass({
 
         var eventNodes = eventList.map(e => {
             console.log(e.event);
+            if(e.event === "assigned"){
+                console.log(e);
+                console.log(e.actor.login, e.assignee.login);
+            }
             if(e.event === "comment")
             {
                 return <Comment event={e} />;
@@ -93,16 +97,35 @@ var TimelineItem = React.createClass({
 
         var body = EventFormatters[e.event](e, type).body;
         console.log(iconClass, body);
+        var badge = getTimelineBadge(e);
         return (
             <li>
-                <div className="timeline-badge default">
-                    <i className={iconClass}></i>
-                </div>
-                <p>{body}</p>
+                {getTimelineBadge(e)}
+                <p><strong>{e.actor.login}&nbsp;</strong>{body}</p>
             </li>
         );
     }
 });
+
+function getTimelineBadge(e) {
+    if(e.actor !== undefined) {
+        if(e.actor.avatar_url !== undefined &&
+           e.actor.avatar_url !== "")
+        {
+            return (
+                <img className="timeline-avatar" src={e.actor.avatar_url} ></img>
+            );
+        } else {
+            var iconClass = EventIcons[e.event];
+            return (                
+                <div className="timeline-badge default">
+                    <i className={iconClass}></i>
+                </div>
+            );
+        }
+    }
+
+}
 
 //these map the various event types to icon
 var EventIcons = {
@@ -151,10 +174,6 @@ var EventFormatters = {
         'referenced':
             (e,issueType) => { return {
                     heading: "added some commits",
-                    body: <p>
-                            <h5></h5>
-                            Commit message
-                          </p>
                 };
             },
         'mentioned':
@@ -164,42 +183,48 @@ var EventFormatters = {
             },
         'assigned':
             (e,issueType) => { return {
-                    body: "Assigned to XXXX"
+                    body: ( <span>assigned this { issueType } to <strong>{ e.assignee.login }</strong></span> )
                 };
             },        
         'unassigned':
             (e,issueType) => { return {
-                    body: "Unassigned"
+                    body: ( <span>assigned this { issueType }</span> )
                 };
             },
         'milestoned':
             (e,issueType) => { return {
-                    body: "Added to milestone XXX"
+                    body: ( <span>added this { issueType } to milestone <strong>{ e.milestone.title }</strong></span> )
                 };
             },
         'demilestoned':
             (e,issueType) => { return {
-                    body: "Removed from milestone"
+                    body: ( <span>removed this { issueType } from milestone <strong>{ e.milestone.title }</strong></span> )
                 };
             },
         'labeled':
-            (e,issueType) => { return {
-                    body: "Label XXX added"
+            (e,issueType) => { 
+                var bg = "#" + e.label.color;
+                var label = <span className="label" style={{background: bg}}>{e.label.name}</span>;
+                return {
+                    body: ( <span>added label {label}</span> )
                 };
             },
         'unlabeled':
-            (e,issueType) => { return {
-                    body: "Label XXX removed"
+            (e,issueType) => { 
+                var bg = "#" + e.label.color;
+                var label = <span className="label" style={{background: bg}}>{e.label.name}</span>;
+                return {
+                    body: ( <span>removed label {label}</span> )
                 };
             },
         'renamed':
             (e,issueType) => { return {
-                    body: "Title Changed"
+                    body: <span>changed title to {e.issue.title}</span>
                 };
             },
         'locked':
             (e,issueType) => { return {
-                    body: "Issue Locked"
+                    body: `locked this ${ issueType }`
                 };
             },
         'head_ref_deleted':

@@ -20,6 +20,7 @@ module.exports = React.createClass({
         Promise.all(parts).then(function(parts) {
             //want to merge events and comments into one stream
             //while filtering out certain event types
+            console.log("EVENTS::::",parts[1]);
             var mixedEvents = parts[1].data.concat(parts[2].data.map(
                                                 c => {
                                                     //make comments look something like normal events
