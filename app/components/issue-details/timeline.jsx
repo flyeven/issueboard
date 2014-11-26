@@ -181,7 +181,7 @@ var EventFormatters = {
             },
         'referenced':
             (e,issueType) => { return {
-                    heading: "added some commits",
+                    body: "added some commits",
                 };
             },
         'mentioned':

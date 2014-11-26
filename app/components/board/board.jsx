@@ -55,19 +55,18 @@ module.exports = React.createClass({
             );
         }, this);
 
-        var issueModal = p.params.issue ? 
+        /* var issueModal = p.params.issue ? 
                         <IssueDetails number={p.params.issue} 
                                       organisation={p.params.organisation}
                                       repository={p.params.repository}
                                       show={true}
                                       onClose={this.hideIssueDetails}
                                       handleHidden={this.issueDetailsHidden} />
-                        : null;
+                        : null;*/
 
         return (
             <div>
                 <BreadCrumbs organisation={this.props.params.organisation} repository={this.props.params.repository}/>
-                {issueModal}
                 <div className="issues-container">
                     {milestones}
                 </div>

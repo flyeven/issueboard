@@ -4,6 +4,7 @@ var React = require('react');
 var Router = require('react-router');
 var Github = require('./api/github.js');
 var Board = require('./components/board/board.jsx');
+var IssueDetails = require('./components/issue-details/issuedetails.jsx');
 var BreadCrumbs = require('./components/navigation/breadcrumbs.jsx');
 
 var Route = Router.Route;
@@ -42,7 +43,7 @@ React.render((
             <DefaultRoute handler={Organisations} />
             <Route name="organisation" path=":organisation" handler={Organisations}/>
             <Route name="board" path=":organisation/:repository" handler={Board} />
-            <Route name="issue" path=":organisation/:repository/:issue" handler={Board} />
+            <Route name="issue" path=":organisation/:repository/:issue" handler={IssueDetails} />
         <NotFoundRoute handler={NotFound} />
         </Route>
         <DefaultRoute handler={Organisations} />

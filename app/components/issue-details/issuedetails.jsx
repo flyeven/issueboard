@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react/addons'),
     BootstrapModalMixin = require('./modalmixin.jsx'),
+    BreadCrumbs = require('../navigation/breadcrumbs.jsx'),
     Timeline = require('./timeline.jsx'),
     Github = require('../../api/github.js'),
     Marked = require('marked');
@@ -17,17 +18,19 @@ Marked.setOptions({
 });
 
 module.exports = React.createClass({
-    mixins: [BootstrapModalMixin],
+    //mixins: [BootstrapModalMixin],
     getInitialState: function() {
         return { loading: true };
     },
     componentDidMount: function () {
         var p = this.props;
+        var params = this.props.params;
+
         console.log('mounting');
         var parts = [
-            Github.getIssue(p.organisation, p.repository, p.number),
-            Github.getIssueEvents(p.organisation, p.repository, p.number),
-            Github.getIssueComments(p.organisation, p.repository, p.number)
+            Github.getIssue(params.organisation, params.repository, params.issue),
+            Github.getIssueEvents(params.organisation, params.repository, params.issue),
+            Github.getIssueComments(params.organisation, params.repository, params.issue)
         ];
         Promise.all(parts).then(function(parts) {
             //want to merge events and comments into one stream
@@ -49,15 +52,7 @@ module.exports = React.createClass({
     },
     render: function() {
         var s = this.state;
-        var buttons = [{ type: "primary", text: "Close Issue" }];
-        if(this.props.buttons !== undefined)
-        {
-            buttons = this.props.buttons.map(function(button) {
-                      return <button type="button" className={'btn btn-' + button.type} onClick={button.handler}>
-                        {button.text}
-                      </button>;
-                    });
-        }
+        var params = this.props.params;
     
         var title = s.loading ? 
                     <strong>Loading Issue...</strong> : 
@@ -86,23 +81,30 @@ module.exports = React.createClass({
                         </div>
                     );
 
-        return <div className="modal fade">
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h4 class="modal-title">{title}</h4>
-              </div>
-              <div className="modal-body">
-                {body}
-              </div>
-              { !s.loading ? 
-              <div className="modal-footer">
-                {buttons}
-              </div>
-              : null }
-            </div>
-          </div>
-        </div>;
+        return  <div className="container">
+                    <div className="row">
+                        <div className="col-md-12">
+                            <BreadCrumbs organisation={params.organisation} repository={params.repository} issue={params.issue} />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-8">
+                            <h1>{title}</h1>
+                            <p>rcknight opened this issue X days ago - 0 comments</p>
+                        </div>
+                        <div className="col-md-4">
+                            <button className="btn btn-default">Edit</button>
+                            <button className="btn btn-primary">New Issue</button>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-12">
+                            {body}
+                        </div>
+                    </div>
+
+                </div>
+        ;
     }
 });
 

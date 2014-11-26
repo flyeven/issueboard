@@ -19,12 +19,13 @@ module.exports = React.createClass({
         if(this.props.repository !== undefined)
             linkNodes.push(<li><Link to="board" params={{organisation: this.props.organisation, repository: this.props.repository}}>{this.props.repository}</Link></li>);
 
+        if(this.props.issue !== undefined)
+            linkNodes.push(<li><Link to="issue" params={{organisation: this.props.organisation, repository: this.props.repository, issue: this.props.issue }}>Issue #{this.props.issue}</Link></li>);
+
         return (
-            <div className="container-fluid">
-                <ol className="breadcrumb">
+            <ol className="breadcrumb">
                     {linkNodes}
-                </ol>
-            </div>
+            </ol>
         );
     }
 });
