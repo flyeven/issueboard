@@ -2,7 +2,19 @@
 var React = require('react/addons'),
     BootstrapModalMixin = require('./modalmixin.jsx'),
     Timeline = require('./timeline.jsx'),
-    Github = require('../../api/github.js');
+    Github = require('../../api/github.js'),
+    Marked = require('marked');
+
+Marked.setOptions({
+  renderer: new Marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,
+  smartypants: false
+});
 
 module.exports = React.createClass({
     mixins: [BootstrapModalMixin],
@@ -60,6 +72,8 @@ module.exports = React.createClass({
         if(s.issueData !== undefined && s.issueData.body !== "")
             bodyText = s.issueData.body;
 
+        var rendered = Marked(bodyText);
+
         var body = s.loading ?
                     (
                         <div className="progress" style={{"width": "40%", "margin": "auto"}}>
@@ -67,13 +81,13 @@ module.exports = React.createClass({
                         </div>
                     ) : (
                         <div>
-                            <p>{bodyText}</p>
+                            <div dangerouslySetInnerHTML={{__html: rendered }}></div>
                             <Timeline issueEvents={s.events} heading="Activity"/>
                         </div>
                     );
 
         return <div className="modal fade">
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-lg">
             <div className="modal-content">
               <div className="modal-header">
                 <h4 class="modal-title">{title}</h4>

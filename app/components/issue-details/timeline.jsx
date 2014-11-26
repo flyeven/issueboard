@@ -1,4 +1,16 @@
-var React = require('react/addons');
+var React = require('react/addons'),
+    Marked = require('marked');
+
+Marked.setOptions({
+  renderer: new Marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,
+  smartypants: false
+});
 
 //passed list of events as props?
 module.exports= React.createClass({
@@ -63,8 +75,8 @@ var Comment = React.createClass({
     render: function() {
         var e = this.props.event;
         var iconClass = EventIcons[e.event];
-        var body = EventFormatters[e.event](e).body;
-        console.log(iconClass, body);
+        var body = EventFormatters[e.event](e).body;    
+        var rendered = Marked(body);
         return (
             <li className="timeline-comment">
                 {getTimelineBadge(e)}
@@ -72,8 +84,8 @@ var Comment = React.createClass({
                     <div className="panel-heading">
                         <strong>{e.actor.login} commented</strong>
                     </div>
-                    <div className="panel-body">
-                        {body}
+                    <div className="panel-body" dangerouslySetInnerHTML={{__html: rendered }}>
+                        
                     </div>
                 </div>
             </li>
@@ -214,8 +226,10 @@ var EventFormatters = {
                 };
             },
         'renamed':
-            (e,issueType) => { return {
-                    body: <span>changed title to {e.issue.title}</span>
+            (e,issueType) => { 
+                console.log("RENAMED",e);
+                return {
+                    body: <span>changed title to "{e.rename.to}"</span>
                 };
             },
         'locked':
